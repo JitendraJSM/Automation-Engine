@@ -13,17 +13,24 @@ class App {
     console.log(`App initialized.`);
   }
 
-  next(...args) {
-    if (args.length > 0 && this.errorHandler !== null) {
-      console.log(`next function called with args ${args}`);
-      this.errorHandler(this, ...args);
+  next(error) {
+    // console.log(this);
+    if (error) {
+      // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
+
+      if (this.errorHandler == null) {
+        console.log(
+          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
+        );
+        // console.log(error);
+      } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
       this.currentActionIndex++;
     }
   }
 
-  async start() {
-    // Start the application
+  async run() {
+    // Start the actionList queue
     this.currentActionIndex = 0;
     while (this.currentActionIndex < this.actionList.length) {
       const action = this.actionList[this.currentActionIndex];
@@ -53,7 +60,7 @@ class App {
     this.actionList.push({ args, callback });
   }
 
-  errorHandler(handlerFunction) {
+  addGlobalErrorHandler(handlerFunction) {
     if (typeof handlerFunction !== "function") {
       throw new Error("Error handlerFunction must be a function");
     }
