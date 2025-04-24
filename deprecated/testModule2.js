@@ -1,4 +1,4 @@
-const catchAsync = require("./utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 
 const testFunction2 = catchAsync(async function (var1, var2) {
   // const newVar = var2.testProp;

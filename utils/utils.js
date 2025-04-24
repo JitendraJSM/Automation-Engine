@@ -3,11 +3,6 @@ const fs = require("fs");
 const os = require("os");
 const readline = require("readline");
 
-const checkImportFromUtils = () => {
-  console.log("All Utils Imported Successfully");
-};
-exports.checkImportFromUtils = checkImportFromUtils;
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 exports.delay = delay;
 
@@ -105,31 +100,34 @@ async function log(message) {
 }
 exports.log = log;
 
-async function getCurrentMachineName() {
-  // Get the current user's username
-  let currentMachine = os.userInfo().username;
-
-  const availableMachines = ["Office", "Er. Jitendra Nath", "SM-NETWORK"];
-
-  if (!availableMachines.includes(currentMachine))
-    console.log(
-      `Current Machine (i.e. "${currentMachine}") \n\t\tis not in "availableMachines" array in utils. Please add it to "availableMachines" Array.`
-    );
-  return false;
-}
-exports.getCurrentMachineName = getCurrentMachineName;
-
-async function getAvailableChromeProfile() {
-  const profiles = [];
-  const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
-  // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
-  const profilesCreated = fs
-    .readdirSync(profilesPath)
-    .filter((foldersName) => foldersName.startsWith("Profile"));
-
-  // 2. Find first available profile number
-  const nextProfileNumber = profilesCreated.length + 1;
-  return nextProfileNumber;
-}
-exports.getAvailableChromeProfile = getAvailableChromeProfile;
 // --------------------------------------------------------------
+// async function nextAvailableChromeProfile() {
+//   const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+//   // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
+//   const profilesCreated = fs
+//     .readdirSync(profilesPath)
+//     .filter((foldersName) => foldersName.startsWith("Profile"));
+
+//   // 2. Find first available profile number
+//   const nextProfileNumber = profilesCreated.length + 1;
+//   return nextProfileNumber;
+// }
+// exports.nextAvailableChromeProfile = nextAvailableChromeProfile;
+
+// async function currentMachineName() {
+//   return os.userInfo().username;
+//   /* The given below code is actually API's resonsibility, not utils's.
+
+//   // Get the current user's username
+//   let currentMachine = os.userInfo().username;
+
+//   const availableMachines = ["Office", "Er. Jitendra Nath", "SM-NETWORK"];
+
+//   if (!availableMachines.includes(currentMachine))
+//     console.log(
+//       `Current Machine (i.e. "${currentMachine}") \n\t\tis not in "availableMachines" array in utils. Please add it to "availableMachines" Array.`
+//     );
+//   return false;
+//   */
+// }
+// exports.currentMachineName = currentMachineName;

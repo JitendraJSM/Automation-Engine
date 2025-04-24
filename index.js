@@ -1,29 +1,25 @@
 require("dotenv").config();
-const utils = require("./utils/utils.js");
+const apiInterface = require("./modules/apiInterface.js");
+const BrowserModule = require("./modules/browserModule.js");
+const App = require("./modules/app.js");
 
-const App = require("./app.js");
-const { testFunction } = require("./testModule.js");
-const { testFunction2 } = require("./testModule2.js");
-const { testFunction3 } = require("./testModule3.js");
+const updateTask = require("./tasks/updateTask.json");
 
 async function main() {
   console.log(`Main function Started.`);
+
+  let db = new apiInterface();
+  await db.init();
+
+  let browserModule = new BrowserModule();
+
   let app = new App();
-  await app.init();
+  await app.init(db, browserModule);
 
-  app.addAction(testFunction, "Arg1 for t1");
-  app.addAction(utils.delay, 2000);
-  app.addAction(testFunction2, "Arg1 for t2", "Arg2 for t2");
-  // app.addAction(testFunction2, "Arg1 for t2");
-  app.addAction(utils.delay, 2000);
-  app.addAction(testFunction3, "Arg1 for t3", "Arg2 for t3", "Arg3 for t3");
+  // ------------------ Testing code ---------------------------
+  app.run(updateTask);
+  // -----------------------------------------------------------
 
-  app.addGlobalErrorHandler(function (error) {
-    console.log(error);
-  });
-
-  await utils.delay(2000);
-
-  await app.run();
+  console.log(`---END---`);
 }
 main();

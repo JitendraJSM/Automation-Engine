@@ -7,7 +7,21 @@
 5. To conditionally skip a function, call `return this.next()` in the function.
 6. Use `return this.next(error)` to handle errors.
 7. The `run()` method returns a promise that resolves when the queue is empty.
-<!-- ------------- -->
+8. Added State to APP
+
+- 1. Added a state object to store shared data
+- 2. Results from functions are automatically stored in state using the function name as key
+- 3. Added setState and getState methods for explicit state management
+- 4. Functions can access shared data through:
+     -- this.state directly
+     -- this.setState() and this.getState() methods
+     -- Return values from previous functions (stored automatically)
+     This approach gives you three ways to share data between functions:
+
+- 5. Using explicit state management with setState/getState
+- 6. Accessing this.state directly
+- 7. Using automatic storage of function return values
+  <!-- ------------- -->
 
 - next() working
 - next(error working)

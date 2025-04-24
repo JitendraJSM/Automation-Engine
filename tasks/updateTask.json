@@ -1,0 +1,32 @@
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName",
+    "shouldStoreState": "currentMachine",
+    "continueOnError": false,
+    "pollingEnabled": true,
+    "pollingInterval": 1000,
+    "pollingTimeout": 4000,
+    "pollingRetries": 3
+  },
+  {
+    "parentModuleName": "db",
+    "actionName": "getNewMemberToAdd",
+    "arguments": "/members?systemName=-OfficePC",
+    "shouldStoreState": "newMemberToAdd",
+    "continueOnError": false,
+    "polling": true,
+    "pollingInterval": 1000,
+    "pollingRetries": 3
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile",
+    "shouldStoreState": "nextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "browserModule",
+    "actionName": "init",
+    "arguments": "{profileTarget:nextAvailableChromeProfile}"
+  }
+]
