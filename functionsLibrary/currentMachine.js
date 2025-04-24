@@ -1,3 +1,4 @@
+const os = require("os");
 module.exports = {
   getCurrentMachineName: async function () {
     return os.userInfo().username;

@@ -2,12 +2,14 @@
 // 2. automation data will be stored in app.state
 // 3. Browser fuction will be stored in app.browserModule
 const utils = require("../utils/utils.js");
-const currentMachine = require("../utils/currentMachine.js");
+const currentMachine = require("../functionsLibrary/currentMachine.js");
+const updateTask = require("../tasks/updateTask.json");
 
 class App {
   constructor(db, browserModule) {
     this.db = db;
     this.browserModule = browserModule;
+    this.currentMachine = currentMachine; // Add currentMachine module
 
     // == Automation data ==
     this.actionList = [];
@@ -53,7 +55,9 @@ class App {
       // Get the parent module instance
       const parentModule = this[parentModuleName];
       if (!parentModule) {
-        throw new Error(`Module ${parentModuleName} not found`);
+        throw new Error(
+          `Module ${parentModuleName} not found while executing action: ${actionName}`
+        );
       }
 
       // Get the action function
@@ -64,8 +68,11 @@ class App {
         );
       }
 
-      // Parse arguments if they're provided as a string
-      const parsedArgs = typeof args === "string" ? JSON.parse(args) : args;
+      // Only parse as JSON if it's an object-like string
+      const parsedArgs =
+        typeof args === "string" && args.startsWith("{")
+          ? JSON.parse(args)
+          : args;
 
       // Execute the action
       const result = await action.call(parentModule, parsedArgs);

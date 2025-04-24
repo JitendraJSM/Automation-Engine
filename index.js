@@ -13,11 +13,12 @@ async function main() {
 
   let browserModule = new BrowserModule();
 
-  let app = new App();
-  await app.init(db, browserModule);
+  let app = new App(db, browserModule);
+  await app.init();
 
   // ------------------ Testing code ---------------------------
-  app.run(updateTask);
+  await app.run(updateTask);
+  console.log(`${app.state.currentMachine} is the current machine.`);
   // -----------------------------------------------------------
 
   console.log(`---END---`);
