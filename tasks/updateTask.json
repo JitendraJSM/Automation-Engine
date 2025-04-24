@@ -10,9 +10,9 @@
     "pollingRetries": 3
   },
   {
-    "parentModuleName": "db",
+    "parentModuleName": "api",
     "actionName": "getNewMemberToAdd",
-    "arguments": "/members?systemName=-OfficePC",
+    "arguments": "/members?systemName=-Er. Jitendra Nath",
     "shouldStoreState": "newMemberToAdd",
     "continueOnError": false,
     "polling": true,

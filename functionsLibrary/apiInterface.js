@@ -1,4 +1,40 @@
 const utils = require("../utils/utils.js");
+// Fetch data from API and store in local cache
+async function fetch(endpoint, params = {}) {
+  try {
+    const response = await fetch(`${this.API_URL}${endpoint}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      ...params,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! status: ${response.status} on ${this.API_URL}${endpoint}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Failed to fetch data from ${endpoint}:`, error);
+    throw error;
+  }
+}
+module.exports.fetch = fetch;
+
+async function apiTesting() {
+  try {
+    this.fetch();
+  } catch (error) {
+    console.error("Failed to initialize database interface:", error);
+    throw error;
+  }
+}
+module.exports.apiTesting = apiTesting;
+
 class apiInterface {
   constructor() {
     this.db = {}; // Local cache for storing data
@@ -8,66 +44,6 @@ class apiInterface {
       // base: process.env.API_URL || "http://localhost:3000/api/v1",
       // Add more endpoints as needed
     };
-  }
-  // Initialize the database interface
-  async init() {
-    try {
-      this.fetch();
-    } catch (error) {
-      console.error("Failed to initialize database interface:", error);
-      throw error;
-    }
-  }
-
-  // Fetch data from API and store in local cache
-  async fetch(endpoint, params = {}) {
-    try {
-      const response = await fetch(`${this.API_URL}${endpoint}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        ...params,
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error! status: ${response.status} on ${this.API_URL}${endpoint}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(`Failed to fetch data from ${endpoint}:`, error);
-      throw error;
-    }
-  }
-
-  // Post data to API
-  async post(endpoint, data, params = {}) {
-    try {
-      const response = await fetch(`${this.API_URL}${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        ...params,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      // Update local cache
-      this.db[endpoint] = result;
-      return result;
-    } catch (error) {
-      console.error(`Failed to post data to ${endpoint}:`, error);
-      throw error;
-    }
   }
 
   // Update data through API
@@ -127,7 +103,19 @@ class apiInterface {
       });
       console.log(newMember);
       */
-    this.db.newMemberToAdd = await this.fetch("/members?systemName=-OfficePC");
+    // this.db.newMemberToAdd = await this.fetch("/members?systemName=-OfficePC");
+    console.log(`===============================================`);
+    console.log(this);
+    console.log(`===============================================`);
+
+    const response = await this.fetch("/members?systemName=-Er. Jitendra Nath");
+    if (response.results == 0) {
+      console.log(`No new member to add.`);
+      return false;
+    }
+    console.log(response.data.data[0]);
+
+    this.db.newMemberToAdd = response;
     return this.db.newMemberToAdd;
   }
 }

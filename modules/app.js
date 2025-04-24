@@ -6,8 +6,9 @@ const currentMachine = require("../functionsLibrary/currentMachine.js");
 const updateTask = require("../tasks/updateTask.json");
 
 class App {
-  constructor(db, browserModule) {
-    this.db = db;
+  constructor(api, browserModule) {
+    this.api = api;
+    this.db = api.db;
     this.browserModule = browserModule;
     this.currentMachine = currentMachine; // Add currentMachine module
 
@@ -42,14 +43,14 @@ class App {
     }
   }
 
-  async executeTask(task) {
+  async executeAction(action) {
     const {
       parentModuleName,
       actionName,
       arguments: args,
       shouldStoreState,
       continueOnError = false,
-    } = task;
+    } = action;
 
     try {
       // Get the parent module instance
@@ -75,7 +76,7 @@ class App {
           : args;
 
       // Execute the action
-      const result = await action.call(parentModule, parsedArgs);
+      const result = await action.call(this, parsedArgs);
 
       // Store result in state if specified
       if (shouldStoreState && result !== undefined) {
@@ -87,18 +88,18 @@ class App {
       if (!continueOnError) {
         throw error;
       }
-      console.error(`Error executing task: ${error.message}`);
+      console.error(`Error executing action: ${error.message}`);
       return null;
     }
   }
 
-  async run(tasks) {
+  async run(task) {
     // Handle both single task and array of tasks
-    const taskArray = Array.isArray(tasks) ? tasks : [tasks];
+    const actionsArray = Array.isArray(task) ? task : [task];
 
-    // Execute each task sequentially
-    for (const task of taskArray) {
-      await this.executeTask(task);
+    // Execute each action sequentially
+    for (const action of actionsArray) {
+      await this.executeAction(action);
     }
   }
 

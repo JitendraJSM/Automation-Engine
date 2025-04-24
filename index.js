@@ -8,17 +8,20 @@ const updateTask = require("./tasks/updateTask.json");
 async function main() {
   console.log(`Main function Started.`);
 
-  let db = new apiInterface();
-  await db.init();
+  let api = new apiInterface();
+  await api.init();
 
   let browserModule = new BrowserModule();
 
-  let app = new App(db, browserModule);
+  let app = new App(api, browserModule);
   await app.init();
 
   // ------------------ Testing code ---------------------------
   await app.run(updateTask);
   console.log(`${app.state.currentMachine} is the current machine.`);
+  console.log(`New member to add is as below :`);
+  console.log(app.state.newMember);
+
   // -----------------------------------------------------------
 
   console.log(`---END---`);
