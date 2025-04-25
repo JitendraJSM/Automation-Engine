@@ -1,8 +1,8 @@
-const utils = require("../utils/utils.js");
+const API_URL = process.env.API_URL || "http://localhost:3000/api/v1";
 // Fetch data from API and store in local cache
-async function fetch(endpoint, params = {}) {
+async function fetchAPI(endpoint, params = {}) {
   try {
-    const response = await fetch(`${this.API_URL}${endpoint}`, {
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,7 @@ async function fetch(endpoint, params = {}) {
 
     if (!response.ok) {
       throw new Error(
-        `HTTP error! status: ${response.status} on ${this.API_URL}${endpoint}`
+        `HTTP error! status: ${response.status} on ${API_URL}${endpoint}`
       );
     }
 
@@ -23,11 +23,11 @@ async function fetch(endpoint, params = {}) {
     throw error;
   }
 }
-module.exports.fetch = fetch;
+module.exports.fetchAPI = fetchAPI;
 
 async function apiTesting() {
   try {
-    this.fetch();
+    await fetchAPI();
   } catch (error) {
     console.error("Failed to initialize database interface:", error);
     throw error;
@@ -35,92 +35,50 @@ async function apiTesting() {
 }
 module.exports.apiTesting = apiTesting;
 
-class apiInterface {
-  constructor() {
-    this.db = {}; // Local cache for storing data
-    this.API_URL = process.env.API_URL || "http://localhost:3000/api/v1";
-    this.endpoints = {
-      // Define your API endpoints here
-      // base: process.env.API_URL || "http://localhost:3000/api/v1",
-      // Add more endpoints as needed
-    };
-  }
+// Update data through API
+async function update(endpoint, data, params = {}) {
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      ...params,
+    });
 
-  // Update data through API
-  async update(endpoint, data, params = {}) {
-    try {
-      const response = await fetch(`${this.API_URL}${endpoint}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        ...params,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      // Update local cache
-      this.db[endpoint] = result;
-      return result;
-    } catch (error) {
-      console.error(`Failed to update data at ${endpoint}:`, error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }
 
-  // Get data from local cache
-  getFromCache(endpoint) {
-    return this.db[endpoint];
-  }
-
-  // Clear specific endpoint data from cache
-  clearCache(endpoint) {
-    if (endpoint) {
-      delete this.db[endpoint];
-    } else {
-      this.db = {}; // Clear entire cache if no endpoint specified
-    }
-  }
-  // Reset local db
-  async resetdb() {
-    this.db = {};
-    return true;
-  }
-  // Log the entire database
-  async logDB() {
-    await utils.log(JSON.stringify(this.db));
-    console.log(`DB Logged`);
-    return true;
-  }
-  // ------------------- Get Data from API Methods
-  async getNewMemberToAdd() {
-    /* const newMember = await this.fetch("/members", {
-      systemName: "-OfficePC",
-      });
-      console.log(newMember);
-      */
-    // this.db.newMemberToAdd = await this.fetch("/members?systemName=-OfficePC");
-    console.log(`===============================================`);
-    console.log(this);
-    console.log(`===============================================`);
-
-    const response = await this.fetch("/members?systemName=-Er. Jitendra Nath");
-    if (response.results == 0) {
-      console.log(`No new member to add.`);
-      return false;
-    }
-    console.log(response.data.data[0]);
-
-    this.db.newMemberToAdd = response;
-    return this.db.newMemberToAdd;
+    const result = await response.json();
+    // Update local cache
+    this.db[endpoint] = result;
+    return result;
+  } catch (error) {
+    console.error(`Failed to update data at ${endpoint}:`, error);
+    throw error;
   }
 }
+module.exports.update = update;
 
-module.exports = apiInterface;
+// ------------------- Get Data from API Methods
+async function getNewMemberToAdd() {
+  const response = await fetchAPI(
+    `/members?systemName=-${this.state.currentMachine}`
+  );
+  if (response.results == 0) {
+    console.log(`No new member to add.`);
+    return false;
+  }
+  console.log(`There are ${response.results} new members available to add.`);
+
+  const newMembersToAdd = response.data.data;
+
+  return newMembersToAdd[0];
+}
+module.exports.getNewMemberToAdd = getNewMemberToAdd;
+
 // -------------------------------------
 // const os = require("os");
 

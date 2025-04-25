@@ -19,7 +19,7 @@ class App {
     // Add shared state object
     this.state = {};
 
-    console.log(`Your Automation-App (i.e. app) Instanciated.`);
+    // console.log(`Your Automation-App (i.e. app) Instanciated.`);
   }
 
   async init() {
