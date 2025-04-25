@@ -84,8 +84,8 @@ async function openChromeInstance(profileTarget, windowSize, windowPosition) {
     `In openChromeInstance function, Profile to be opened has target: ${profileTarget}`
   );
 
-  // const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
-  const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
+  const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
+  // const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
   const openCommand = `"${chromePath}"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
 
   const chromeProcess = spawn(openCommand, [], {
@@ -107,6 +107,9 @@ async function pptrConnect(wsUrl, initialURL) {
   if (!wsUrl) {
     wsUrl = await readWSfromFile();
   }
+  if (!initialURL) {
+    initialURL = process.env.INITIAL_URL;
+  }
   // try {
   const browser = await puppeteer.connect({
     browserWSEndpoint: wsUrl,
@@ -114,33 +117,27 @@ async function pptrConnect(wsUrl, initialURL) {
   });
 
   const pages = await browser.pages();
+
   let page;
-  if (process.env.ENVIRONMENT === "development") page = pages[0];
-  else {
-    page =
-      pages.find((p) => p.url().includes(initialURL)) ||
-      pages.find(
-        (p) => p.url() === "about:blank" || p.url() === "chrome://new-tab-page/"
-      );
 
-    // (!page || !page.url().includes(initialURL) is true
-    // ---------- if page doesn't exists.
-    // ---------- if page exists and page's url !== initialURL
-    // All over means if the initialURL page is not opened then go and open that in new Tab
+  page =
+    pages.find((p) => p.url().includes(initialURL)) ||
+    pages.find(
+      (p) => p.url() === "about:blank" || p.url() === "chrome://new-tab-page/"
+    );
 
-    if (!page) {
-      console.log("No blank page or Chat Page found, Opening a new Page.");
+  if (!page) {
+    console.log("No blank page or Chat Page found, Opening a new Page.");
+
+    if (process.env.ALWAYS_OPEN_WITH_INITIAL_URL === "true") {
       page = await browser.newPage();
-      if (
-        process.env.ALWAYS_OPEN_WITH_INITIAL_URL !== "false" ||
-        !page.url().includes(initialURL)
-      )
-        await page.goto(initialURL, {
-          waitUntil: ["load", "domcontentloaded", "networkidle0"],
-          timeout: 60000,
-        });
-    }
+      await page.goto(initialURL, {
+        waitUntil: ["load", "domcontentloaded", "networkidle0"],
+        timeout: 60000,
+      });
+    } else page = pages[0];
   }
+
   // pages.forEach(async (p) => p.url().includes(page.url()) || (await p.close())); // Close all other pages
 
   await page.bringToFront();

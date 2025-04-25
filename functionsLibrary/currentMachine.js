@@ -1,23 +1,31 @@
 const os = require("os");
 const fs = require("fs");
 
-module.exports = {
-  getCurrentMachineName: async function () {
-    return os.userInfo().username;
-  },
+async function getCurrentMachineName() {
+  return os.userInfo().username;
+}
+module.exports.getCurrentMachineName = getCurrentMachineName;
 
-  getNextAvailableChromeProfile: async function () {
-    const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
-    // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
-    const profilesCreated = fs
-      .readdirSync(profilesPath)
-      .filter((foldersName) => foldersName.startsWith("Profile"));
+async function getNextAvailableChromeProfile() {
+  const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+  // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
+  const profilesCreated = fs
+    .readdirSync(profilesPath)
+    .filter((foldersName) => foldersName.startsWith("Profile"));
 
-    // 2. Find first available profile number
-    const nextProfileNumber = profilesCreated.length + 1;
-    return nextProfileNumber;
-  },
-};
+  // 2. Find first available profile number
+  const nextProfileNumber = profilesCreated.length + 1;
+  return nextProfileNumber;
+}
+module.exports.getNextAvailableChromeProfile = getNextAvailableChromeProfile;
+
+async function testforArgs(arugs) {
+  console.log(`testforArgs function started.`);
+
+  console.log(`type of arugments is ${typeof arugments}`);
+  console.log(arugs);
+}
+module.exports.testforArgs = testforArgs;
 // -------------- Deprecated code.
 // async function currentMachineName() {
 //   return os.userInfo().username;

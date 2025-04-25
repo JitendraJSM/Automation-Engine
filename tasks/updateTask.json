@@ -12,7 +12,6 @@
   {
     "parentModuleName": "api",
     "actionName": "getNewMemberToAdd",
-    "arguments": "/members?systemName=-Er. Jitendra Nath",
     "shouldStoreState": "newMemberToAdd",
     "continueOnError": false,
     "polling": true,
@@ -23,5 +22,9 @@
     "parentModuleName": "currentMachine",
     "actionName": "getNextAvailableChromeProfile",
     "shouldStoreState": "nextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "browserFunctions",
+    "actionName": "init"
   }
 ]

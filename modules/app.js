@@ -1,15 +1,19 @@
 // 1. API functions & data will be stored in app.db
 // 2. automation data will be stored in app.state
-// 3. Browser fuction will be stored in app.browserModule
+// 3. Browser fuction will be stored in app.browserFunctions
 const utils = require("../utils/utils.js");
+// === Functions Library ===
 const currentMachine = require("../functionsLibrary/currentMachine.js");
+const api = require("../functionsLibrary/apiInterface.js");
+const browserFunctions = require("../functionsLibrary/browserFunctions.js");
+
+// === Tasks ===
 const updateTask = require("../tasks/updateTask.json");
 
 class App {
-  constructor(api, browserModule) {
+  constructor() {
     this.api = api;
-    this.db = api.db;
-    this.browserModule = browserModule;
+    this.browserFunctions = browserFunctions;
     this.currentMachine = currentMachine; // Add currentMachine module
 
     // == Automation data ==
@@ -70,6 +74,7 @@ class App {
       }
 
       // Only parse as JSON if it's an object-like string
+
       const parsedArgs =
         typeof args === "string" && args.startsWith("{")
           ? JSON.parse(args)
