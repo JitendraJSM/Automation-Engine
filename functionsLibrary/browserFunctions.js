@@ -18,3 +18,12 @@ async function init() {
   }
 }
 module.exports.init = init;
+
+async function printAllPagesURLs() {
+  let pages = await this.browser.pages();
+
+  // Replace each page object with its URL
+  pages = await Promise.all(pages.map(async (page) => await page.url()));
+  console.log(`pages : ${pages}`);
+}
+module.exports.printAllPagesURLs = printAllPagesURLs;

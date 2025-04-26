@@ -6,15 +6,18 @@ const utils = require("../utils/utils.js");
 const currentMachine = require("../functionsLibrary/currentMachine.js");
 const api = require("../functionsLibrary/apiInterface.js");
 const browserFunctions = require("../functionsLibrary/browserFunctions.js");
+const popUpFunctions = require("../functionsLibrary/popUpFunctions.js");
 
 // === Tasks ===
 const updateTask = require("../tasks/updateTask.json");
 
 class App {
   constructor() {
+    // == functionsLibraries ==
     this.api = api;
     this.browserFunctions = browserFunctions;
     this.currentMachine = currentMachine; // Add currentMachine module
+    this.popUpFunctions = popUpFunctions;
 
     // == Automation data ==
     this.actionList = [];
