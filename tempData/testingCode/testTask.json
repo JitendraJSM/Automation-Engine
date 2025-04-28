@@ -1,0 +1,7 @@
+[
+  {
+    "parentModuleName": "test4",
+    "actionName": "multiplePollingExample",
+    "shouldStoreState": "test4Res"
+  }
+]

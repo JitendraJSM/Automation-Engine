@@ -24,11 +24,17 @@
     "shouldStoreState": "nextAvailableChromeProfile"
   },
   {
-    "parentModuleName": "browserFunctions",
-    "actionName": "init"
+    "parentModuleName": "browserIns",
+    "actionName": "initializeBrowser",
+    "continueOnError": false
   },
   {
     "parentModuleName": "popUpFunctions",
     "actionName": "popUpHandler"
+  },
+  {
+    "parentModuleName": "test",
+    "actionName": "testBrowserIns",
+    "continueOnError": false
   }
 ]

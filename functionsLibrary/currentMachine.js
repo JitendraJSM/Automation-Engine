@@ -14,7 +14,8 @@ async function getNextAvailableChromeProfile() {
     .filter((foldersName) => foldersName.startsWith("Profile"));
 
   // 2. Find first available profile number
-  const nextProfileNumber = profilesCreated.length + 1;
+  const nextProfileNumber = profilesCreated.length + 2;
+  // const nextProfileNumber = profilesCreated.length + 1;
   return nextProfileNumber;
 }
 module.exports.getNextAvailableChromeProfile = getNextAvailableChromeProfile;

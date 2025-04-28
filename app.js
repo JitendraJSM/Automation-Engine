@@ -1,23 +1,34 @@
 // 1. API functions & data will be stored in app.db
 // 2. automation data will be stored in app.state
 // 3. Browser fuction will be stored in app.browserFunctions
-const utils = require("../utils/utils.js");
+const utils = require("./utils/utils.js");
+const Monitor = require("./Classes/MonitorClass.js");
+const BrowserInstanceClass = require("./Classes/BrowserClass.js");
+
 // === Functions Library ===
-const currentMachine = require("../functionsLibrary/currentMachine.js");
-const api = require("../functionsLibrary/apiInterface.js");
-const browserFunctions = require("../functionsLibrary/browserFunctions.js");
-const popUpFunctions = require("../functionsLibrary/popUpFunctions.js");
+const currentMachine = require("./functionsLibrary/currentMachine.js");
+const api = require("./functionsLibrary/apiInterface.js");
+const popUpFunctions = require("./functionsLibrary/popUpFunctions.js");
+
+// === Testing purposes ===
+// const monitor = require("../monitor.js");
+// const test4 = require("../tempData/testingCode/test4.js");
+const test = require("./functionsLibrary/webAutomation/testingLib.js");
 
 // === Tasks ===
-const updateTask = require("../tasks/updateTask.json");
+const updateTask = require("./tasks/updateTask.json");
 
 class App {
   constructor() {
     // == functionsLibraries ==
     this.api = api;
-    this.browserFunctions = browserFunctions;
     this.currentMachine = currentMachine; // Add currentMachine module
     this.popUpFunctions = popUpFunctions;
+    this.utils = utils;
+
+    this.test = test;
+    // == Modules ==
+    this.monitor = new Monitor();
 
     // == Automation data ==
     this.actionList = [];
@@ -32,6 +43,8 @@ class App {
   async init() {
     // Initialize app components
     console.log(`App initialized.`);
+
+    this.browserIns = new BrowserInstanceClass(this);
   }
 
   next(error) {

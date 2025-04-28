@@ -12,6 +12,7 @@ exports.delay = delay;
 // func passed to this shuold not call any other function, if it does then may or may not have some bugs.
 // func passed to this must not have try-catch block.
 
+/*old robustPolling function
 const robustPolling = async (func, options = {}, ...args) => {
   const {
     maxAttempts = 30,
@@ -42,6 +43,53 @@ const robustPolling = async (func, options = {}, ...args) => {
     reject(
       `Function failed after ${maxAttempts} attempts. with Error: ${errMSG}`
     );
+  });
+};*/
+const robustPolling = async (func, options = {}, ...args) => {
+  const {
+    maxAttempts = 30,
+    delayMs = 1000,
+    timeoutMs = 30000,
+    retryCondition = () => true,
+    rejectOnEnd = true, // if true then reject (that stops execution) on end of polling.
+    infintiePolling = false, // if true then no maxAttempts and no timeoutMs, just keep polling until func returns true or stopped manually.
+  } = options;
+
+  return new Promise(async (resolve, reject) => {
+    let attempts = 0;
+    const startTime = Date.now();
+
+    while (
+      infintiePolling ||
+      (attempts < maxAttempts && Date.now() - startTime < timeoutMs)
+    ) {
+      attempts++;
+      try {
+        const result = await func(...args);
+
+        if (result && retryCondition(result)) {
+          resolve(result);
+          //   break;
+          return;
+        }
+      } catch (err) {
+        errMSG =
+          err.message ||
+          "Error msg not defined in Options Object passed to robustPolling func";
+        console.log(`Attempt ${attempts} failed with error:`, errMSG);
+      }
+
+      await delay(delayMs);
+    }
+
+    // Handle end of polling based on rejectOnEnd flag
+    if (rejectOnEnd) {
+      reject(
+        `Function failed after ${attempts} attempts. with Error: ${errMSG}`
+      );
+    } else {
+      resolve(null);
+    }
   });
 };
 exports.robustPolling = robustPolling;

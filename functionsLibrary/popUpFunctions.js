@@ -1,15 +1,54 @@
 async function privacySandboxHandler() {
-  const privacyPopUp = "chrome://privacy-sandbox-dialog/notice";
-  let pages = await this.browser.pages();
+  console.log(`Privacy Sandbox handler called`);
 
-  if (pages.find((page) => page.url() === privacyPopUp)) {
-    console.log(`Privacy sandbox pop up is opened.`);
+  const privacyPopUp = "chrome://privacy-sandbox-dialog/notice";
+
+  let flag = await this.monitor.robustPolling(
+    async () => {
+      let pages = await this.browser.pages();
+      if (pages.length > 1) return true;
+      else return false;
+    },
+    {
+      maxAttempts: 15,
+      delayMs: 2000,
+      timeoutMs: 60000,
+      rejectOnEnd: false,
+      retryCondition: (result) => result === true,
+    }
+  );
+  console.log(`flag: ${flag}`);
+  await this.utils.randomDelay(1.5, 1.0);
+  // ============================================================
+  if (flag) {
+    // 3. Check for Pivacy SandBox Popup
+    let privacySandBoxPage = (await this.browser.pages()).find(
+      (p) => p.url() === "chrome://privacy-sandbox-dialog/notice"
+    );
+    await privacySandBoxPage
+      .locator("privacy-sandbox-notice-dialog-app >>> #ackButton")
+      .click();
+    console.log(`Privacy SandBox Popup Closed`);
+
+    // 4. Check for SignIn Popup
+    /*    let SignInPage = (await browser.pages()).find((p) =>
+      p
+        .url()
+        .includes("chrome://signin-dice-web-intercept.top-chrome/chrome-signin")
+    );
+    SignInPage &&
+      (await SignInPage.locator(
+        "chrome-signin-app >>> #acceppt-button-content"
+      ).click());*/
   }
+  // ============================================================
 }
+module.exports.privacySandboxHandler = privacySandboxHandler;
+
 async function popUpHandler() {
   // await privacySandboxHandler();
   // console.log(`Popup handler called`);
-  await privacySandboxHandler.call(this);
+  // await privacySandboxHandler.call(this);
   // For a one-time detection of a new page
   //   browser.once("targetcreated", async (target) => {
   //     if (target.type() === "page") {

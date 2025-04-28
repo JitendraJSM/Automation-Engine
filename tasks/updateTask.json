@@ -3,23 +3,35 @@
     "parentModuleName": "currentMachine",
     "actionName": "getCurrentMachineName",
     "shouldStoreState": "currentMachine",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd",
+    "shouldStoreState": "newMemberToAdd",
     "continueOnError": false,
-    "pollingEnabled": true,
+    "polling": true,
     "pollingInterval": 1000,
-    "pollingTimeout": 4000,
     "pollingRetries": 3
   },
   {
     "parentModuleName": "currentMachine",
     "actionName": "getNextAvailableChromeProfile",
-    "shouldStoreState": "nextAvailableChromeProfile"
+    "shouldStoreState": "nextAvailableChromeProfile",
+    "continueOnError": false
   },
   {
-    "parentModuleName": "browserFunctions",
-    "actionName": "init"
+    "parentModuleName": "browserIns",
+    "actionName": "initializeBrowser",
+    "continueOnError": false
   },
   {
-    "parentModuleName": "browserFunctions",
-    "actionName": "printAllPagesURLs"
+    "parentModuleName": "popUpFunctions",
+    "actionName": "privacySandboxHandler"
+  },
+  {
+    "parentModuleName": "test",
+    "actionName": "testNavigation",
+    "continueOnError": false
   }
 ]

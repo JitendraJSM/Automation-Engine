@@ -1,8 +1,11 @@
 require("dotenv").config();
 
-const App = require("./modules/app.js");
+const App = require("./app.js");
 
 const updateTask = require("./tasks/updateTask.json");
+
+// === Testing purposes ===
+const testTask = require("./tempData/testingCode/testTask.json");
 
 async function main() {
   console.log(`Main function Started.`);
