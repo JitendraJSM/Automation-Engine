@@ -30,8 +30,14 @@
     "actionName": "privacySandboxHandler"
   },
   {
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "arguments": "https://www.youtube.com/",
+    "continueOnError": false
+  },
+  {
     "parentModuleName": "test",
-    "actionName": "testNavigation",
+    "actionName": "testLocator",
     "continueOnError": false
   }
 ]

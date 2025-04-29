@@ -3,11 +3,7 @@
     "parentModuleName": "currentMachine",
     "actionName": "getCurrentMachineName",
     "shouldStoreState": "currentMachine",
-    "continueOnError": false,
-    "pollingEnabled": true,
-    "pollingInterval": 1000,
-    "pollingTimeout": 4000,
-    "pollingRetries": 3
+    "continueOnError": false
   },
   {
     "parentModuleName": "api",
@@ -21,7 +17,8 @@
   {
     "parentModuleName": "currentMachine",
     "actionName": "getNextAvailableChromeProfile",
-    "shouldStoreState": "nextAvailableChromeProfile"
+    "shouldStoreState": "nextAvailableChromeProfile",
+    "continueOnError": false
   },
   {
     "parentModuleName": "browserIns",
@@ -30,11 +27,18 @@
   },
   {
     "parentModuleName": "popUpFunctions",
-    "actionName": "popUpHandler"
+    "actionName": "privacySandboxHandler"
   },
   {
-    "parentModuleName": "test",
-    "actionName": "testBrowserIns",
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "arguments": "https://example.com/",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "click",
+    "arguments": "a",
     "continueOnError": false
   }
 ]

@@ -1,4 +1,3 @@
-// If Proxy create random errors, then use different approach.
 const fs = require("fs");
 const utils = require("../utils/utils.js");
 class PageClass {
@@ -8,8 +7,6 @@ class PageClass {
   */
 
   constructor(page) {
-    console.log(`Page Getting Wrapped -----`);
-
     this.page = page; // Neccessary for Proxy
 
     // == Automation data ==
@@ -72,21 +69,10 @@ class PageClass {
   }
   async navigateTo(url) {
     try {
-      console.log(`A method on PageClass called.`);
-
-      await this.page.goto(url, {
-        waitUntil: "networkidle0", // Wait until network is idle
-        timeout: 300000, // 5 minutes Timeout in milliseconds
-        // referer: "https://www.google.com", // Custom referer header
-        // userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36", // Custom user agent
-        // ignoreHTTPSErrors: true, // Ignore HTTPS errors
-        domContentLoaded: true, // Wait for DOMContentLoaded event
-        // defaultViewport: { width: 1920, height: 1080 }, // Custom viewport settings
-      });
-      console.log(`Completed Navigation to${this.page.url()}`);
-
-      // await this.log("nav", `Navigated to: ${url}`);
-      // await this.log("nav", `Navigated to: ${url}`);
+      console.log(`navigateTo Function Called`);
+      this.goto(url);
+      console.log(`going to ${url}`);
+      return true;
     } catch (error) {
       console.log(`Error in navigateTo: ${error.message}`);
     }
