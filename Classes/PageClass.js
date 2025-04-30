@@ -1,6 +1,7 @@
 // If Proxy create random errors, then use different approach.
 const fs = require("fs");
 const utils = require("../utils/utils.js");
+
 class PageClass {
   /* Static Properties Examples 
   //    static IDselectors = ["#moreButton"];  // Not Needed OLD property
@@ -9,9 +10,7 @@ class PageClass {
 
   constructor(page) {
     console.log(`Page Getting Wrapped -----`);
-
     this.page = page; // Neccessary for Proxy
-
     // == Automation data ==
     this.actionList = [];
     this.pageNavigationList = [];
@@ -28,16 +27,16 @@ class PageClass {
         selector: "h1",
         action: "getText",
         actionType: "pageFunction",
-      },
-      {
-        selector: "a ::-p-text(IANA-managed Reserved Domains)",
-        action: "navigateTo",
-        actionType: "pageFunction",
-        navigator: true,
-      },
-    ];
-    this.currentState = this.automationQueue[this.currentStateIndex];
-    */
+        },
+        {
+          selector: "a ::-p-text(IANA-managed Reserved Domains)",
+          action: "navigateTo",
+          actionType: "pageFunction",
+          navigator: true,
+          },
+          ];
+          this.currentState = this.automationQueue[this.currentStateIndex];
+          */
 
     // Create a proxy to delegate method calls
     return new Proxy(this, {
@@ -56,20 +55,13 @@ class PageClass {
   }
 
   //  ===== 👇🏻 Methods 👇🏻 =====
-  async getText(selector) {
-    console.log(`Get Text Function Called`);
-    const el = await this.locator(selector).waitHandle();
-    const text = await this.evaluate((element) => element.textContent, el);
-    console.log(text);
+  async waitForPageLoad(timeout = 30000) {
+    return await this.waitForFunction(
+      () => document.readyState === "complete",
+      { timeout } // Set timeout to 10 seconds
+    );
   }
 
-  async pageName() {
-    console.log(`pageName function from PageClass called.`);
-    return module.exports.name;
-  }
-  async OnlyPageClassModuleFunction() {
-    console.log(`Yes, i am a method defined in Page class module.`);
-  }
   async navigateTo(url) {
     try {
       console.log(`A method on PageClass called.`);
@@ -83,20 +75,99 @@ class PageClass {
         domContentLoaded: true, // Wait for DOMContentLoaded event
         // defaultViewport: { width: 1920, height: 1080 }, // Custom viewport settings
       });
-      console.log(`Completed Navigation to${this.page.url()}`);
 
-      // await this.log("nav", `Navigated to: ${url}`);
+      console.log(`Completed Navigation to${this.page.url()}`);
       // await this.log("nav", `Navigated to: ${url}`);
     } catch (error) {
       console.log(`Error in navigateTo: ${error.message}`);
     }
   }
 
-  async waitForPageLoad(timeout = 30000) {
-    return await this.waitForFunction(
-      () => document.readyState === "complete",
-      { timeout } // Set timeout to 10 seconds
+  async waitForElementRobust(selectorOrText, Options) {
+    const options = {
+      text: true,
+      parentElement: "",
+      timeoutMs: 30000,
+      ...Options,
+    };
+    let selectorString = options.text
+      ? `${options.parentElement} ::-p-text(${selectorOrText})`
+      : selectorOrText;
+    console.log(`waitForElementRobust function called for ${selectorOrText}.`);
+    return await this.page.locator(selectorString).waitHandle();
+    /*    return await utils.robustPolling(
+      async (page, selectorOrText) => {
+        const element = await page.locator(selectorOrText).waitHandle();
+        if (!element) throw Error("Element not found.");
+
+        const boundingBox = await element.boundingBox();
+        if (boundingBox) {
+          return true; // Exit on success
+        } else throw Error(`Bounding not found: ${selectorOrText}.`);
+      },
+      options,
+      this,
+      selectorOrText
+    );*/
+  }
+
+  /**
+   * Attempts to click on an element that is not immediately clickable on a page.
+   *
+   * This method waits for the page to fully load + randomDelay(0.75), and then
+   * utilizes robust polling to repeatedly try clicking on the specified element until successful.
+   *
+   * The element can be specified either by a selector string or directly as an element handle.
+   * The method logs the action upon a successful click.
+   *
+   * @param {string|object} selectorOrElement - The selector string or element handle to click.
+   * @throws Will throw an error if the element cannot be found or its bounding box is not available.
+   */
+  async clickNotClickable(selectorOrElement) {
+    await this.page.waitForPageLoad();
+    await this.utils.randomDelay(0.75);
+
+    await this.utils.robustPolling(
+      async (page, selectorOrElement) => {
+        let element =
+          typeof selectorOrElement === "string"
+            ? await page.waitForElementRobust(selectorOrElement)
+            : selectorOrElement;
+        if (!element) throw Error("Element not found.");
+
+        const boundingBox = await element.boundingBox();
+        if (boundingBox) {
+          const { x, y, width, height } = boundingBox;
+          await page.mouse.click(x + width / 2, y + height / 2);
+          await page.log("act", `Clicked on ${selectorOrElement} done.`);
+          return true; // Exit on success
+        } else throw Error(`Bounding not found: ${selectorOrElement}.`);
+      },
+      {
+        maxAttempts: 9,
+        delayMs: 3000,
+        timeoutMs: 30000,
+        retryCondition: (result) => result === true,
+      },
+      this.page,
+      selectorOrElement
     );
+    await this.page.waitForPageLoad();
+  }
+
+  async getText(selector) {
+    console.log(`Get Text Function Called`);
+    const el = await this.locator(selector).waitHandle();
+    const text = await this.evaluate((element) => element.textContent, el);
+    console.log(text);
+  }
+
+  async pageName() {
+    console.log(`pageName function from PageClass called.`);
+    return module.exports.name;
+  }
+  async OnlyPageClassModuleFunction() {
+    console.log(`Yes, i am a method defined in Page class module.`);
   }
 
   async typeHuman(selector, stringToType) {
@@ -173,50 +244,6 @@ class PageClass {
       // return subBTN.textContent;
       return subBTN;
     }, selector);
-  }
-
-  /**
-   * Attempts to click on an element that is not immediately clickable on a page.
-   *
-   * This method waits for the page to fully load + randomDelay(0.75), and then
-   * utilizes robust polling to repeatedly try clicking on the specified element until successful.
-   *
-   * The element can be specified either by a selector string or directly as an element handle.
-   * The method logs the action upon a successful click.
-   *
-   * @param {string|object} selectorOrElement - The selector string or element handle to click.
-   * @throws Will throw an error if the element cannot be found or its bounding box is not available.
-   */
-  async clickNotClickable(selectorOrElement) {
-    await this.waitForPageLoad();
-    await utils.randomDelay(0.75);
-
-    await utils.robustPolling(
-      async (page, selectorOrElement) => {
-        let element =
-          typeof selectorOrElement === "string"
-            ? await page.locator(selectorOrElement).waitHandle()
-            : selectorOrElement;
-        if (!element) throw Error("Element not found.");
-
-        const boundingBox = await element.boundingBox();
-        if (boundingBox) {
-          const { x, y, width, height } = boundingBox;
-          await page.mouse.click(x + width / 2, y + height / 2);
-          await page.log("act", `Clicked on ${selectorOrElement} done.`);
-          return true; // Exit on success
-        } else throw Error(`Bounding not found: ${selectorOrElement}.`);
-      },
-      {
-        maxAttempts: 9,
-        delayMs: 3000,
-        timeoutMs: 30000,
-        retryCondition: (result) => result === true,
-      },
-      this,
-      selectorOrElement
-    );
-    await this.waitForPageLoad();
   }
 
   /**

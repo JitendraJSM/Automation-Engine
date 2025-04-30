@@ -7,14 +7,15 @@ async function getCurrentMachineName() {
 module.exports.getCurrentMachineName = getCurrentMachineName;
 
 async function getNextAvailableChromeProfile() {
-  const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+  // const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+  const profilesPath = `C:/Automation-App-by-JN-Data`;
   // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
   const profilesCreated = fs
     .readdirSync(profilesPath)
     .filter((foldersName) => foldersName.startsWith("Profile"));
 
   // 2. Find first available profile number
-  const nextProfileNumber = profilesCreated.length + 2;
+  const nextProfileNumber = profilesCreated.length + 1;
   // const nextProfileNumber = profilesCreated.length + 1;
   return nextProfileNumber;
 }

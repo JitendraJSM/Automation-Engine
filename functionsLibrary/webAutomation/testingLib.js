@@ -3,7 +3,7 @@ module.exports = { testLocator, testBrowserIns };
 // === Definitions ===
 async function testLocator(URL) {
   console.log(`=======Start testing Code=======`);
-  await this.page.locator("::-p-text(Shorts)").click();
+  await this.page.clickNotClickable("Shorts");
   console.log(`=======Code Tested=======`);
 }
 async function testBrowserIns() {
