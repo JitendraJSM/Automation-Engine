@@ -54,11 +54,15 @@ class Monitor {
         if (shouldStop) {
           clearInterval(intervalFun);
           delete this.pollingTasks[pollingTaskName];
-          let endMSG = `Task ${pollingTaskName} failed after ${attempts} attempts.`;
+          options.endMSG ||= `Task ${pollingTaskName} failed after ${attempts} attempts.`;
           if (rejectOnEnd) {
-            reject(endMSG);
+            reject(
+              `monitor.robustPolling(${pollingTaskName}) rejecting with message "${options.endMSG}".`
+            );
           } else {
-            console.log(`Resolving with null, But ${endMSG}`);
+            console.log(
+              `monitor.robustPolling(${pollingTaskName}) resolving null, with message "${options.endMSG}".`
+            );
             resolve(null);
           }
         }
