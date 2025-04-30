@@ -1,3 +1,21 @@
+// Requiremented methods on page objects:
+/* 
+  1. waitForPageLoad(options)
+              - if already loaded, returns true immediately
+              - waits for page to be loaded "options.timeOut"
+              - returns true if page is loaded,
+              - returns false if page is not loaded in "options.timeOut" 
+              - throws an error if "options.continueOnError" is set to "true"
+
+  2. getElementByText(text, options) 
+              - waitForPageLoad()
+              - waits for element to be visible on the page "options.timeOut"
+              - returns element if element is found,
+              - returns false if element is not found within "options.timeOut"
+              - throws an error if "options.continueOnError" is set to "true"
+              Note - this method waits and returns the first element that has the text exactly or partially matches the argument text.
+              - if parent element of text is known then pass that as options.parentElement. (for specificity.)
+*/
 // If Proxy create random errors, then use different approach.
 const fs = require("fs");
 const utils = require("../utils/utils.js");
@@ -8,8 +26,6 @@ class PageClass {
   */
 
   constructor(page) {
-    console.log(`Page Getting Wrapped -----`);
-
     this.page = page; // Neccessary for Proxy
 
     // == Automation data ==
