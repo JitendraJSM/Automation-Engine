@@ -1,0 +1,43 @@
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName",
+    "shouldStoreState": "currentMachine",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd",
+    "shouldStoreState": "newMemberToAdd",
+    "continueOnError": false,
+    "polling": true,
+    "pollingInterval": 1000,
+    "pollingRetries": 3
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile",
+    "shouldStoreState": "nextAvailableChromeProfile",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "browserIns",
+    "actionName": "initializeBrowser",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "privacySandboxHandler"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "arguments": "https://www.youtube.com/",
+    "continueOnError": false
+  },
+  {
+    "parentModuleName": "test",
+    "actionName": "testLocator",
+    "continueOnError": false
+  }
+]

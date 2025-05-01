@@ -1,3 +1,11 @@
+// === Interface ===
+module.exports = {
+  privacySandboxHandler,
+  popUpHandler,
+};
+
+// === Implementation ===
+
 async function privacySandboxHandler() {
   console.log(`Privacy Sandbox handler called`);
 
@@ -39,11 +47,10 @@ async function privacySandboxHandler() {
     SignInPage &&
       (await SignInPage.locator(
         "chrome-signin-app >>> #acceppt-button-content"
-      ).click());*/
+        ).click());*/
   }
   // ============================================================
 }
-module.exports.privacySandboxHandler = privacySandboxHandler;
 
 async function popUpHandler() {
   // await privacySandboxHandler();
@@ -58,4 +65,3 @@ async function popUpHandler() {
   //     }
   //   });
 }
-module.exports.popUpHandler = popUpHandler;

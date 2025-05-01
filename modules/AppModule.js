@@ -1,31 +1,39 @@
-const executeAction = require("./modules/appExecutor.js");
-// 1. API functions & data will be stored in app.db
-// 2. automation data will be stored in app.state
-// 3. Browser fuction will be stored in app.browserFunctions
-const utils = require("./utils/utils.js");
-const Monitor = require("./Classes/MonitorClass.js");
-const BrowserInstanceClass = require("./Classes/BrowserClass.js");
+/* Notes:- 
+1. API functions & data will be stored in app.db
+2. automation data will be stored in app.state
+3. Browser fuction will be stored in app.browserFunctions
+4. properties of actions / functions will have this preference as below:
+    - if defined in task.json file then it will be used
+    - if defined in that action's / function's file then it will be used
+    - if not defined on both places then it will be undefined
+*/
 
-// === Functions Library ===
-const currentMachine = require("./functionsLibrary/currentMachine.js");
-const api = require("./functionsLibrary/apiInterface.js");
-const popUpFunctions = require("./functionsLibrary/popUpFunctions.js");
+// === Base Imports ===
+const Monitor = require("./MonitorModule.js");
+const executeAction = require("./appExecutor.js");
+const utils = require("../utils/utils.js");
+
+// === Functions Library Imports ===
+const api = require("../functionsLibrary/api.js");
+const chrome = require("../functionsLibrary/chrome.js");
+const currentMachine = require("../functionsLibrary/currentMachine.js");
+const popUpFunctions = require("../functionsLibrary/popUpFunctions.js");
+const youTube = require("../functionsLibrary/youtube.js");
 
 // === Testing purposes ===
 // const monitor = require("../monitor.js");
 // const test4 = require("../tempData/testingCode/test4.js");
-const test = require("./functionsLibrary/webAutomation/testingLib.js");
-
-// === Tasks ===
-const updateTask = require("./tasks/updateTask.json");
+const test = require("../functionsLibrary/testFuncitonsLibrary/test.js");
 
 class App {
   constructor() {
     // == functionsLibraries ==
-    this.api = api;
-    this.currentMachine = currentMachine; // Add currentMachine module
-    this.popUpFunctions = popUpFunctions;
     this.utils = utils;
+    this.api = api;
+    this.chrome = chrome;
+    this.currentMachine = currentMachine;
+    this.popUpFunctions = popUpFunctions;
+    this.youTube = youTube;
 
     this.test = test;
     // == Modules ==
@@ -44,8 +52,6 @@ class App {
   async init() {
     // Initialize app components
     console.log(`App initialized.`);
-
-    this.browserIns = new BrowserInstanceClass(this);
   }
 
   next(error) {
@@ -69,7 +75,6 @@ class App {
     const actionsArray = Array.isArray(task) ? task : [task];
 
     // Execute each action sequentially
-
     for (const action of actionsArray) {
       await executeAction.call(this, action);
     }

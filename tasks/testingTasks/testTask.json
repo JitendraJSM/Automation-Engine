@@ -1,0 +1,7 @@
+[
+  {
+    "parentModuleName": "test",
+    "actionName": "testFunction",
+    "shouldStoreState": "testFunctionResult"
+  }
+]

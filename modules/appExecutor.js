@@ -7,32 +7,32 @@
 // --------------
 // "this" in thw executeAction function is the app instance as it is called in the app by "executeAction.call(this, action)""
 
-async function executeAction(action) {
-  const {
+async function executeAction(actionDetails) {
+  let {
     parentModuleName,
     actionName,
     arguments: args,
     shouldStoreState,
-    continueOnError = false,
-  } = action;
+    continueOnError,
+    // continueOnError = false,
+  } = actionDetails;
 
+  // Get the parent module instance
+  const parentModule = this[parentModuleName];
+  if (!parentModule) {
+    throw new Error(
+      `Module ${parentModuleName} not found while executing action: ${actionName}`
+    );
+  }
+
+  // Get the action function
+  const action = parentModule[actionName];
+  if (typeof action !== "function") {
+    throw new Error(
+      `Action ${actionName} not found in module ${parentModuleName}`
+    );
+  }
   try {
-    // Get the parent module instance
-    const parentModule = this[parentModuleName];
-    if (!parentModule) {
-      throw new Error(
-        `Module ${parentModuleName} not found while executing action: ${actionName}`
-      );
-    }
-
-    // Get the action function
-    const action = parentModule[actionName];
-    if (typeof action !== "function") {
-      throw new Error(
-        `Action ${actionName} not found in module ${parentModuleName}`
-      );
-    }
-
     // Only parse as JSON if it's an object-like string
 
     const parsedArgs =
@@ -40,16 +40,21 @@ async function executeAction(action) {
         ? JSON.parse(args)
         : args;
 
-    // Execute the action
-    const result = await action.call(this, parsedArgs);
+    // Execute the action based on whether it's async or not
+    const result =
+      typeof action.constructor.name === "AsyncFunction"
+        ? await action.call(this, parsedArgs)
+        : action.call(this, parsedArgs);
 
     // Store result in state if specified
+    shouldStoreState ||= action.shouldStoreState;
     if (shouldStoreState && result !== undefined) {
       this.state[shouldStoreState] = result;
     }
 
     return result;
   } catch (error) {
+    continueOnError ||= action.continueOnError;
     if (!continueOnError) {
       throw error;
     }

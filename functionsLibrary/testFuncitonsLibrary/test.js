@@ -1,3 +1,16 @@
+// === InterFace ===
+module.exports = { testFunction };
+
+// === Implementations ===
+
+async function testFunction() {
+  console.log(`=======Start testFunction Code=======`);
+  console.log(`o teri.....`);
+
+  console.log(`=======Code Tested=======`);
+}
+
+/* === below functions are for testing the Monitor module ===
 // Example 1 Simple Condition Monitoring with default options most useful
 async function simpleConditionMonitoring() {
   // Example function to poll
@@ -138,3 +151,4 @@ module.exports.multiplePollingExample = multiplePollingExample;
 //   console.log(location); // New York
 // }
 // objectDestructuringExample();
+*/

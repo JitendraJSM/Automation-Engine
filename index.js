@@ -1,21 +1,25 @@
 require("dotenv").config();
 
-const App = require("./app.js");
+const App = require("./modules/AppModule.js");
 
+// === Tasks ===
 const updateTask = require("./tasks/updateTask.json");
 
-// === Testing purposes ===
-const testTask = require("./tempData/testingCode/testTask.json");
+// === Testing Tasks ===
+const testTask = require("./tasks/testingTasks/testTask.json");
 
 async function main() {
   console.log(`Main function Started.`);
 
   let app = new App();
-  await app.init();
 
   // ------------------ Testing purpose ---------------------------
+  // await app.run(testTask);
   await app.run(updateTask);
   // console.log(`${app.state.currentMachine} is the current machine.`);
+  // console.log(`app.state is as below : `);
+  // console.log(app.state);
+
   // console.log(`New member to add is as below :`);
   // console.log(app.state.newMemberToAdd);
   // console.log(

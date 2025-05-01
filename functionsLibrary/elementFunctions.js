@@ -1,4 +1,0 @@
-// === Interface ===
-module.exports = {};
-
-// === Definitions ===

@@ -1,4 +1,4 @@
-const catchAsync = require("../utils/catchAsync");
+const catchAsync = require("../../utils/catchAsync");
 
 const testFunction3 = catchAsync(async function (var1, var2, var3) {
   console.log(

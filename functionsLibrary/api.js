@@ -1,3 +1,12 @@
+// === Interface ===
+module.exports = {
+  apiTesting,
+  fetchAPI,
+  update,
+  getNewMemberToAdd,
+};
+
+// === Implementation ===
 const API_URL = process.env.API_URL || "http://localhost:3000/api/v1";
 // Fetch data from API and store in local cache
 async function fetchAPI(endpoint, params = {}) {
@@ -23,7 +32,6 @@ async function fetchAPI(endpoint, params = {}) {
     throw error;
   }
 }
-module.exports.fetchAPI = fetchAPI;
 
 async function apiTesting() {
   try {
@@ -33,7 +41,6 @@ async function apiTesting() {
     throw error;
   }
 }
-module.exports.apiTesting = apiTesting;
 
 // Update data through API
 async function update(endpoint, data, params = {}) {
@@ -60,7 +67,6 @@ async function update(endpoint, data, params = {}) {
     throw error;
   }
 }
-module.exports.update = update;
 
 // ------------------- Get Data from API Methods
 async function getNewMemberToAdd() {
@@ -77,7 +83,6 @@ async function getNewMemberToAdd() {
 
   return newMembersToAdd[0];
 }
-module.exports.getNewMemberToAdd = getNewMemberToAdd;
 
 // -------------------------------------
 // const os = require("os");
