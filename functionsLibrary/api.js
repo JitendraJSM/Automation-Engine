@@ -73,17 +73,18 @@ async function getNewMemberToAdd() {
   const response = await fetchAPI(
     `/members?systemName=-${this.state.currentMachine}`
   );
+
   if (response.results == 0) {
     console.log(`No new member to add.`);
     return false;
   }
   console.log(`There are ${response.results} new members available to add.`);
 
-  const newMembersToAdd = response.data.data;
+  const newMembersToAdd = await response.data.data;
 
   return newMembersToAdd[0];
 }
-
+getNewMemberToAdd.shouldStoreState = "newMemberToAdd";
 // -------------------------------------
 // const os = require("os");
 

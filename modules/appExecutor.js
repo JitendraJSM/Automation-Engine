@@ -42,7 +42,7 @@ async function executeAction(actionDetails) {
 
     // Execute the action based on whether it's async or not
     const result =
-      typeof action.constructor.name === "AsyncFunction"
+      action.constructor.name === "AsyncFunction"
         ? await action.call(this, parsedArgs)
         : action.call(this, parsedArgs);
 

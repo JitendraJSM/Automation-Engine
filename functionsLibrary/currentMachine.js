@@ -1,6 +1,7 @@
 // === Interfaces ===
 module.exports = {
   getCurrentMachineName,
+  isChromeAlreadyOpened,
   getNextAvailableChromeProfile,
   testforArgs,
 };
@@ -31,6 +32,29 @@ function testforArgs(arugs) {
 
   console.log(`type of arugments is ${typeof arugments}`);
   console.log(arugs);
+}
+
+async function isChromeAlreadyOpened() {
+  const { promisify } = require("util");
+  const { exec } = require("child_process");
+  const promisifiedExec = promisify(exec);
+
+  const port = 9222;
+  // 1.2 Get webSocketDebuggerUrl
+  async function getUrl() {
+    const urlCommand = `curl http://127.0.0.1:${port}/json/version`;
+    const { stdout } = await promisifiedExec(urlCommand);
+    return stdout;
+  }
+  let wsURL;
+  try {
+    wsURL = await getUrl();
+    if (wsURL) wsURL = JSON.parse(wsURL).webSocketDebuggerUrl;
+  } catch (err) {
+    null;
+  }
+  if (wsURL?.startsWith("ws://")) return wsURL;
+  else return false;
 }
 
 // -------------- Deprecated code.

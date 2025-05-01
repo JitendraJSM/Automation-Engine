@@ -86,7 +86,11 @@ async function openChromeInstance(profileTarget, windowSize, windowPosition) {
 
   const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
   // const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
+
+  // for older chrome v135 and below
   const openCommand = `"${chromePath}"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
+  // for newer chrome v136 and above
+  // const openCommand = `"${chromePath}" --user-data-dir="C:/Automation-App-by-JN-Data"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
 
   const chromeProcess = spawn(openCommand, [], {
     shell: true,
@@ -152,7 +156,7 @@ async function pptrConnect(wsUrl, initialURL) {
 }
 
 // only for testing purppose
-exports.pptrConnect = pptrConnect;
+// exports.pptrConnect = pptrConnect;
 
 const writeWSinFile = async (ws) => {
   fs.writeFileSync("currentWS.txt", ws);

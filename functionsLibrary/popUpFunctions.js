@@ -8,23 +8,23 @@ module.exports = {
 
 async function privacySandboxHandler() {
   console.log(`Privacy Sandbox handler called`);
+  // If chrome is already opened, then only 1 attempt is needed
+  let maxAttempts = this.state.isChromeAlreadyOpened ? 1 : 15;
 
-  const privacyPopUp = "chrome://privacy-sandbox-dialog/notice";
+  const isSinglePageOpened = async () => {
+    let pages = await this.browser.pages();
+    if (pages.length > 1) return true;
+    else return false;
+  };
 
-  let flag = await this.monitor.robustPolling(
-    async () => {
-      let pages = await this.browser.pages();
-      if (pages.length > 1) return true;
-      else return false;
-    },
-    {
-      maxAttempts: 15,
-      delayMs: 2000,
-      timeoutMs: 60000,
-      rejectOnEnd: false,
-      retryCondition: (result) => result === true,
-    }
-  );
+  let flag = await this.monitor.robustPolling(isSinglePageOpened, {
+    maxAttempts: maxAttempts,
+    delayMs: 2000,
+    timeoutMs: 60000,
+    rejectOnEnd: false,
+    retryCondition: (result) => result === true,
+    endMSG: "Only 1 page found, means Privacy Sandbox Popup is not opened.",
+  });
   console.log(`flag: ${flag}`);
   await this.utils.randomDelay(1.5, 1.0);
   // ============================================================
@@ -47,7 +47,7 @@ async function privacySandboxHandler() {
     SignInPage &&
       (await SignInPage.locator(
         "chrome-signin-app >>> #acceppt-button-content"
-        ).click());*/
+      ).click());*/
   }
   // ============================================================
 }

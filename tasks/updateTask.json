@@ -6,8 +6,6 @@
   {
     "parentModuleName": "api",
     "actionName": "getNewMemberToAdd",
-    "shouldStoreState": "newMemberToAdd",
-    "continueOnError": false,
     "polling": true,
     "pollingInterval": 1000,
     "pollingRetries": 3
