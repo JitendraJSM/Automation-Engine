@@ -1,11 +1,6 @@
 // Requiremented methods on page objects:
 /* 
-  1. waitForPageLoad(options)
-              - if already loaded, returns true immediately
-              - waits for page to be loaded "options.timeOut"
-              - returns true if page is loaded,
-              - returns false if page is not loaded in "options.timeOut" 
-              - throws an error if "options.continueOnError" is set to "true"
+  
 
   2. getElementByText(text, options) 
               - waitForPageLoad()
@@ -22,21 +17,28 @@ module.exports = hookMethodsOnPage;
 
 // === Implementation ===
 async function hookMethodsOnPage(page) {
-  page.getText = getText;
-  page.navigateTo = navigateTo;
   page.waitForPageLoad = waitForPageLoad;
+  page.navigateTo = navigateTo;
+  page.getText = getText;
   page.typeHuman = typeHuman;
   page.checkVisibilityBeforeClick = checkVisibilityBeforeClick;
   page.clickNotClickable = clickNotClickable;
   page.waitForURLChange = waitForURLChange;
 }
 
-async function getText(selector) {
-  console.log(`Get Text Function Called`);
-  const el = await this.page.locator(selector).waitHandle();
-  const text = await this.page.evaluate((element) => element.textContent, el);
-  console.log(text);
+/*  1. waitForPageLoad(options)
+              - if already loaded, returns true immediately
+              - waits for page to be loaded "options.timeOut"
+              - returns true if page is loaded,
+              - returns false if page is not loaded in "options.timeOut" 
+              - throws an error if "options.continueOnError" is set to "true" */
+async function waitForPageLoad(timeout = 120000) {
+  return await this.page.waitForFunction(
+    () => document.readyState === "complete",
+    { timeout } // Set timeout to 10 minutes in rare coditions.
+  );
 }
+
 async function navigateTo(url) {
   try {
     console.log(`app.page.navigateTo(${url}) called.`);
@@ -56,11 +58,11 @@ async function navigateTo(url) {
   }
 }
 
-async function waitForPageLoad(timeout = 30000) {
-  return await this.page.waitForFunction(
-    () => document.readyState === "complete",
-    { timeout } // Set timeout to 10 seconds
-  );
+async function getText(selector) {
+  console.log(`Get Text Function Called`);
+  const el = await this.page.locator(selector).waitHandle();
+  const text = await this.page.evaluate((element) => element.textContent, el);
+  console.log(text);
 }
 
 async function typeHuman(selector, stringToType) {

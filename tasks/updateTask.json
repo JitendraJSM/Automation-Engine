@@ -5,9 +5,31 @@
   },
   {
     "parentModuleName": "api",
-    "actionName": "getNewMemberToAdd",
-    "polling": true,
-    "pollingInterval": 1000,
-    "pollingRetries": 3
+    "actionName": "getNewMemberToAdd"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "isChromeAlreadyOpened"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "initializeBrowser"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "privacySandboxHandler"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "arguments": "https://www.youtube.com/"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
   }
 ]

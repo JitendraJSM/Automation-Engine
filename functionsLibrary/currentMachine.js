@@ -26,14 +26,17 @@ function getNextAvailableChromeProfile() {
   const nextProfileNumber = profilesCreated.length + 1;
   return nextProfileNumber;
 }
+getNextAvailableChromeProfile.shouldStoreState = "nextAvailableChromeProfile";
 
-function testforArgs(arugs) {
+function testforArgs(args) {
   console.log(`testforArgs function started.`);
 
   console.log(`type of arugments is ${typeof arugments}`);
-  console.log(arugs);
+  console.log(args);
 }
 
+/* Note:- This function must be called before chrome.initializeBrowser() */
+// -- As it is so much dependent on chrome.initializeBrowser() why merge this in that function, what if it needed separately let's think about this in future.
 async function isChromeAlreadyOpened() {
   const { promisify } = require("util");
   const { exec } = require("child_process");
@@ -56,6 +59,7 @@ async function isChromeAlreadyOpened() {
   if (wsURL?.startsWith("ws://")) return wsURL;
   else return false;
 }
+isChromeAlreadyOpened.shouldStoreState = "isChromeAlreadyOpened";
 
 // -------------- Deprecated code.
 // async function currentMachineName() {

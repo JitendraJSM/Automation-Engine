@@ -85,6 +85,12 @@ async function getNewMemberToAdd() {
   return newMembersToAdd[0];
 }
 getNewMemberToAdd.shouldStoreState = "newMemberToAdd";
+/* Doesn't seems required and the polling in appExecuter.js is not implemented yet. 
+getNewMemberToAdd.polling = true;
+getNewMemberToAdd.pollingInterval = 1000;
+getNewMemberToAdd.pollingRetries = 3;
+*/
+
 // -------------------------------------
 // const os = require("os");
 

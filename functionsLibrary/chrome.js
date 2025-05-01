@@ -8,7 +8,8 @@ module.exports = {
 
 // 1. Start / Open this.state.nextProfileNumber / Connect to browser
 async function initializeBrowser() {
-  const { getBrowser } = require("../utils/getBrowser.js");
+  let { getBrowser } = require("../utils/getBrowser.js");
+  let hookMethodsOnPage = require("../functionsLibrary/pageHookFunctions.js");
   try {
     console.log(`Initializing browser...`);
 
@@ -19,8 +20,10 @@ async function initializeBrowser() {
     // Initialize browser and page
     const result = await getBrowser(this.state.browserOptions);
     this.browser = result.browser;
+    this.page = result.page;
+    hookMethodsOnPage(this.page);
 
-    return this;
+    return true;
   } catch (error) {
     console.error("Failed to initialize browser:", error);
     throw error;
