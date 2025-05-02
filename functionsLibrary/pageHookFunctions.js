@@ -19,6 +19,7 @@ module.exports = hookMethodsOnPage;
 async function hookMethodsOnPage(page) {
   page.waitForPageLoad = waitForPageLoad;
   page.navigateTo = navigateTo;
+  page.waitForElementRobust = waitForElementRobust;
   page.getText = getText;
   page.typeHuman = typeHuman;
   page.checkVisibilityBeforeClick = checkVisibilityBeforeClick;
@@ -33,6 +34,9 @@ async function hookMethodsOnPage(page) {
               - returns false if page is not loaded in "options.timeOut" 
               - throws an error if "options.continueOnError" is set to "true" */
 async function waitForPageLoad(timeout = 120000) {
+  console.log(`===============ABCD==================`);
+  console.log(this);
+  console.log(`=================================`);
   return await this.page.waitForFunction(
     () => document.readyState === "complete",
     { timeout } // Set timeout to 10 minutes in rare coditions.
@@ -57,7 +61,85 @@ async function navigateTo(url) {
     console.log(`Error in app.page.navigateTo(${url}) is as: ${error.message}`);
   }
 }
+// ==========================================================================
+async function waitForElementRobust(textOrSelector, Options) {
+  const options = {
+    text: true,
+    parentElement: "",
+    timeoutMs: 60000,
+    ...Options,
+  };
+  let selectorString = options.text
+    ? `${options.parentElement} ::-p-text(${textOrSelector})`
+    : textOrSelector;
+  console.log(`waitForElementRobust function called for ${textOrSelector}.`);
+  return await this.page.locator(selectorString).waitHandle();
+  /*    return await utils.robustPolling(
+      async (page, textOrSelector) => {
+        const element = await page.locator(textOrSelector).waitHandle();
+        if (!element) throw Error("Element not found.");
 
+        const boundingBox = await element.boundingBox();
+        if (boundingBox) {
+          return true; // Exit on success
+        } else throw Error(`Bounding not found: ${textOrSelector}.`);
+      },
+      options,
+      this,
+      textOrSelector
+    );*/
+}
+
+/**
+ * Attempts to click on an element that is not immediately clickable on a page.
+ *
+ * This method waits for the page to fully load + randomDelay(0.75), and then
+ * utilizes robust polling to repeatedly try clicking on the specified element until successful.
+ *
+ * The element can be specified either by a selector string or directly as an element handle.
+ * The method logs the action upon a successful click.
+ *
+ * @param {string|object} textOrSelectorOrElement - The selector string or element handle to click.
+ * @throws Will throw an error if the element cannot be found or its bounding box is not available.
+ */
+async function clickNotClickable(textOrSelectorOrElement, options = {}) {
+  console.log(`=================================`);
+  console.log(this);
+
+  console.log(`=================================`);
+
+  await this.page.waitForPageLoad();
+  await this.utils.randomDelay(0.75);
+  const waitSearchnClick = async (page, textOrSelectorOrElement, options) => {
+    let element =
+      typeof textOrSelectorOrElement === "string"
+        ? await page.waitForElementRobust(textOrSelectorOrElement, options)
+        : textOrSelectorOrElement;
+    if (!element) throw Error("Element not found.");
+
+    const boundingBox = await element.boundingBox();
+    if (boundingBox) {
+      const { x, y, width, height } = boundingBox;
+      await page.mouse.click(x + width / 2, y + height / 2);
+      await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
+      return true; // Exit on success
+    } else throw Error(`Bounding not found: ${textOrSelectorOrElement}.`);
+  };
+  await this.utils.robustPolling(
+    waitSearchnClick,
+    {
+      maxAttempts: 9,
+      delayMs: 3000,
+      timeoutMs: 30000,
+      retryCondition: (result) => result === true,
+    },
+    this.page,
+    textOrSelectorOrElement,
+    options
+  );
+  await this.page.waitForPageLoad();
+}
+// ==========================================================================
 async function getText(selector) {
   console.log(`Get Text Function Called`);
   const el = await this.page.locator(selector).waitHandle();
@@ -150,28 +232,28 @@ async function checkVisibilityBeforeClick(selector) {
  * The element can be specified either by a selector string or directly as an element handle.
  * The method logs the action upon a successful click.
  *
- * @param {string|object} selectorOrElement - The selector string or element handle to click.
+ * @param {string|object} textOrSelectorOrElement - The selector string or element handle to click.
  * @throws Will throw an error if the element cannot be found or its bounding box is not available.
  */
-async function clickNotClickable(selectorOrElement) {
+async function clickNotClickable(textOrSelectorOrElement) {
   await this.page.waitForPageLoad();
   await this.utils.randomDelay(0.75);
   // let page = this.page;
   await this.utils.robustPolling(
-    async (page, selectorOrElement) => {
+    async (page, textOrSelectorOrElement) => {
       let element =
-        typeof selectorOrElement === "string"
-          ? await page.locator(selectorOrElement).waitHandle()
-          : selectorOrElement;
+        typeof textOrSelectorOrElement === "string"
+          ? await page.locator(textOrSelectorOrElement).waitHandle()
+          : textOrSelectorOrElement;
       if (!element) throw Error("Element not found.");
 
       const boundingBox = await element.boundingBox();
       if (boundingBox) {
         const { x, y, width, height } = boundingBox;
         await page.mouse.click(x + width / 2, y + height / 2);
-        await page.log("act", `Clicked on ${selectorOrElement} done.`);
+        await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
         return true; // Exit on success
-      } else throw Error(`Bounding not found: ${selectorOrElement}.`);
+      } else throw Error(`Bounding not found: ${textOrSelectorOrElement}.`);
     },
     {
       maxAttempts: 9,
@@ -180,7 +262,7 @@ async function clickNotClickable(selectorOrElement) {
       retryCondition: (result) => result === true,
     },
     this,
-    selectorOrElement
+    textOrSelectorOrElement
   );
   await this.page.waitForPageLoad();
 }

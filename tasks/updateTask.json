@@ -23,11 +23,7 @@
     "parentModuleName": "popUpFunctions",
     "actionName": "privacySandboxHandler"
   },
-  {
-    "parentModuleName": "page",
-    "actionName": "navigateTo",
-    "arguments": "https://www.youtube.com/"
-  },
+
   {
     "parentModuleName": "page",
     "actionName": "waitForPageLoad"

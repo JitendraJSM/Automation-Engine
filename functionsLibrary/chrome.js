@@ -21,7 +21,7 @@ async function initializeBrowser() {
     const result = await getBrowser(this.state.browserOptions);
     this.browser = result.browser;
     this.page = result.page;
-    hookMethodsOnPage(this.page);
+    hookMethodsOnPage.call(this, this.page);
 
     return true;
   } catch (error) {
