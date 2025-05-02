@@ -29,7 +29,11 @@
   },
   {
     "parentModuleName": "page",
-    "actionName": "clickNotClickable",
-    "arguments": "Shorts"
+    "actionName": "clickNotClickeable",
+    "arguments": "\"Shorts\", \"span.title\""
+  },
+  {
+    "parentModuleName": "youTube",
+    "actionName": "clickOnShortsBTN"
   }
 ]

@@ -34,7 +34,6 @@ async function executeAction(actionDetails) {
   }
   try {
     // Only parse as JSON if it's an object-like string
-
     const parsedArgs =
       typeof args === "string" && args.startsWith("{")
         ? JSON.parse(args)

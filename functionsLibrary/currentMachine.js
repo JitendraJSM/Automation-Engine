@@ -15,7 +15,8 @@ function getCurrentMachineName() {
 getCurrentMachineName.shouldStoreState = "currentMachine";
 
 function getNextAvailableChromeProfile() {
-  const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+  // const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
+  const profilesPath = `C:/Automation-App-by-JN-Data`;
   // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
   const profilesCreated = fs
     .readdirSync(profilesPath)

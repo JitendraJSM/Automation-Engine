@@ -3,9 +3,9 @@ module.exports = { testFunction };
 
 // === Implementations ===
 
-async function testFunction() {
+async function testFunction(args) {
   console.log(`=======Start testFunction Code=======`);
-  console.log(`o teri.....`);
+  // console.log(args);
 
   console.log(`=======Code Tested=======`);
 }
