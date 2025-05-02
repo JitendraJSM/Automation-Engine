@@ -17,14 +17,14 @@ module.exports = hookMethodsOnPage;
 
 // === Implementation ===
 async function hookMethodsOnPage(page) {
-  page.waitForPageLoad = waitForPageLoad;
-  page.navigateTo = navigateTo;
-  page.waitForElementRobust = waitForElementRobust;
-  page.getText = getText;
-  page.typeHuman = typeHuman;
-  page.checkVisibilityBeforeClick = checkVisibilityBeforeClick;
-  page.clickNotClickable = clickNotClickable;
-  page.waitForURLChange = waitForURLChange;
+  page.waitForPageLoad = waitForPageLoad.bind(this);
+  page.navigateTo = navigateTo.bind(this);
+  page.waitForElementRobust = waitForElementRobust.bind(this);
+  page.getText = getText.bind(this);
+  page.typeHuman = typeHuman.bind(this);
+  page.checkVisibilityBeforeClick = checkVisibilityBeforeClick.bind(this);
+  page.clickNotClickable = clickNotClickable.bind(this);
+  page.waitForURLChange = waitForURLChange.bind(this);
 }
 
 /*  1. waitForPageLoad(options)
@@ -34,9 +34,6 @@ async function hookMethodsOnPage(page) {
               - returns false if page is not loaded in "options.timeOut" 
               - throws an error if "options.continueOnError" is set to "true" */
 async function waitForPageLoad(timeout = 120000) {
-  console.log(`===============ABCD==================`);
-  console.log(this);
-  console.log(`=================================`);
   return await this.page.waitForFunction(
     () => document.readyState === "complete",
     { timeout } // Set timeout to 10 minutes in rare coditions.
@@ -103,10 +100,7 @@ async function waitForElementRobust(textOrSelector, Options) {
  * @throws Will throw an error if the element cannot be found or its bounding box is not available.
  */
 async function clickNotClickable(textOrSelectorOrElement, options = {}) {
-  console.log(`=================================`);
-  console.log(this);
-
-  console.log(`=================================`);
+  console.log(`sfda`);
 
   await this.page.waitForPageLoad();
   await this.utils.randomDelay(0.75);
@@ -121,7 +115,7 @@ async function clickNotClickable(textOrSelectorOrElement, options = {}) {
     if (boundingBox) {
       const { x, y, width, height } = boundingBox;
       await page.mouse.click(x + width / 2, y + height / 2);
-      await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
+      // await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
       return true; // Exit on success
     } else throw Error(`Bounding not found: ${textOrSelectorOrElement}.`);
   };
@@ -221,50 +215,6 @@ async function checkVisibilityBeforeClick(selector) {
     // return subBTN.textContent;
     return subBTN;
   }, selector);
-}
-
-/**
- * Attempts to click on an element that is not immediately clickable on a page.
- *
- * This method waits for the page to fully load + randomDelay(0.75), and then
- * utilizes robust polling to repeatedly try clicking on the specified element until successful.
- *
- * The element can be specified either by a selector string or directly as an element handle.
- * The method logs the action upon a successful click.
- *
- * @param {string|object} textOrSelectorOrElement - The selector string or element handle to click.
- * @throws Will throw an error if the element cannot be found or its bounding box is not available.
- */
-async function clickNotClickable(textOrSelectorOrElement) {
-  await this.page.waitForPageLoad();
-  await this.utils.randomDelay(0.75);
-  // let page = this.page;
-  await this.utils.robustPolling(
-    async (page, textOrSelectorOrElement) => {
-      let element =
-        typeof textOrSelectorOrElement === "string"
-          ? await page.locator(textOrSelectorOrElement).waitHandle()
-          : textOrSelectorOrElement;
-      if (!element) throw Error("Element not found.");
-
-      const boundingBox = await element.boundingBox();
-      if (boundingBox) {
-        const { x, y, width, height } = boundingBox;
-        await page.mouse.click(x + width / 2, y + height / 2);
-        await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
-        return true; // Exit on success
-      } else throw Error(`Bounding not found: ${textOrSelectorOrElement}.`);
-    },
-    {
-      maxAttempts: 9,
-      delayMs: 3000,
-      timeoutMs: 30000,
-      retryCondition: (result) => result === true,
-    },
-    this,
-    textOrSelectorOrElement
-  );
-  await this.page.waitForPageLoad();
 }
 
 /**

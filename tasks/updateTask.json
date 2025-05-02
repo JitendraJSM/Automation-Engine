@@ -23,9 +23,13 @@
     "parentModuleName": "popUpFunctions",
     "actionName": "privacySandboxHandler"
   },
-
   {
     "parentModuleName": "page",
     "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "arguments": "Shorts"
   }
 ]

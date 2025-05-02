@@ -17,9 +17,9 @@ async function main() {
   // await app.run(testTask);
   await app.run(updateTask);
   // console.log(`${app.state.currentMachine} is the current machine.`);
-  console.log(`${app.state.newMemberToAdd} are member to add from api.`);
-  console.log(`app.state is as below : `);
-  console.log(app.state);
+  // console.log(`${app.state.newMemberToAdd} are member to add from api.`);
+  // console.log(`app.state is as below : `);
+  // console.log(app.state);
 
   // console.log(`New member to add is as below :`);
   // console.log(app.state.newMemberToAdd);
