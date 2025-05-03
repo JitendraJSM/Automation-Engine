@@ -1,11 +1,20 @@
-// i want a function which to which i gave string and in return i got object.
-// i am giving you different inputs and their outputs,
-// 1. input type string: '{text:testVar}', output's tpy object: { text : testVar }
-// 2. input type string: '{text:testVar, ore:12, opn:rag21s }', output's type object: { text:testVar, ore:12, opn:rag21s }  here 12 is number
-// 2. input type string: '{text:testVar, ore:12, opn:rag21s }', output's type object: { text:testVar, ore:12, opn:rag21s }  here 12 is number
-//  means i need a robust function for parsing string (this string does not needed to be a json formatted string, it could be any.) into object.
-// give me less lines of codes , but that must be simple and logical.
+state = { ops: 59 };
+function parseValue(value) {
+  if (value === "true" || value === "false") {
+    return value === "true";
+  } else if (!isNaN(value)) {
+    return Number(value);
+  } else if (value.isPrototypeOf(this)) {
+    return this[value];
+  } else {
+    return value;
+  }
+}
 function parseStringToObject(str) {
+  const sri = "state";
+  console.log(`sri is: ${sri}`);
+  console.log(`is sri a property of state: ${value.isPrototypeOf(this)}`);
+
   // Remove outer braces and whitespace
   str = str.trim().replace(/^{|}$/g, "");
 
@@ -14,12 +23,14 @@ function parseStringToObject(str) {
     const [key, value] = pair.split(":").map((s) => s.trim());
 
     // Convert value to appropriate type
-    let convertedValue = value;
-    if (!isNaN(value)) {
-      convertedValue = Number(value);
-    } else if (value === "true" || value === "false") {
-      convertedValue = value === "true";
-    }
+    // let convertedValue = value;
+    let convertedValue = parseValue(value);
+
+    // if (!isNaN(value)) {
+    //   convertedValue = Number(value);
+    // } else if (value === "true" || value === "false") {
+    //   convertedValue = value === "true";
+    // }
 
     obj[key] = convertedValue;
     return obj;
@@ -27,7 +38,7 @@ function parseStringToObject(str) {
 }
 
 // Test cases
-const tests = ["{text:testVar}", , "{text:testVar, org:12, ops:true}"];
+const tests = ["{text:testVar, org:12, nestedOBJ:[a,true,b,56], ops:true}"];
 
 tests.forEach((test) => {
   console.log("Input:", test);
