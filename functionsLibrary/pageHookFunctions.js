@@ -59,17 +59,18 @@ async function navigateTo(url) {
   }
 }
 // ==========================================================================
-async function waitForElementRobust(
-  textOrSelector,
-  parentElement,
-  timeoutMs = 60000,
-  text = true
-) {
-  let selectorString = text
-    ? `${parentElement} ::-p-text(${textOrSelector})`
+async function waitForElementRobust(textOrSelector, options) {
+  let selectorString = options?.text
+    ? `::-p-text(${textOrSelector})`
     : textOrSelector;
-  console.log(`waitForElementRobust function called for ${selectorString}.`);
-  return await this.page.locator(selectorString).waitHandle();
+  console.log(`textOrSelector is : ${textOrSelector}`);
+  console.log(`options are : ${options}`);
+  // console.log(`waitForElementRobust function called for ${selectorString}.`);
+  const element = await this.page.locator(selectorString).waitHandle();
+  if (!element) {
+    console.log(`Element not found: ${selectorString}`);
+    return false;
+  } else return element;
   /*    return await utils.robustPolling(
       async (page, textOrSelector) => {
         const element = await page.locator(textOrSelector).waitHandle();
@@ -98,27 +99,14 @@ async function waitForElementRobust(
  * @param {string|object} textOrSelectorOrElement - The selector string or element handle to click.
  * @throws Will throw an error if the element cannot be found or its bounding box is not available.
  */
-async function clickNotClickable(
-  textOrSelectorOrElement,
-  parentElement,
-  ...options
-) {
+async function clickNotClickable(textOrSelectorOrElement, options) {
   await this.page.waitForPageLoad();
   await this.utils.randomDelay(0.75);
 
-  const waitSearchnClick = async (
-    page,
-    textOrSelectorOrElement,
-    parentElement,
-    options
-  ) => {
+  const waitSearchnClick = async (page, textOrSelectorOrElement, options) => {
     let element =
       typeof textOrSelectorOrElement === "string"
-        ? await page.waitForElementRobust(
-            textOrSelectorOrElement,
-            parentElement,
-            ...options
-          )
+        ? await page.waitForElementRobust(textOrSelectorOrElement, options)
         : textOrSelectorOrElement;
     if (!element) throw Error("Element not found.");
 
@@ -130,7 +118,6 @@ async function clickNotClickable(
       return true; // Exit on success
     } else throw Error(`Bounding not found: ${textOrSelectorOrElement}.`);
   };
-  console.log(parentElement);
   await this.utils.robustPolling(
     waitSearchnClick,
     {
@@ -141,7 +128,6 @@ async function clickNotClickable(
     },
     this.page,
     textOrSelectorOrElement,
-    parentElement,
     options
   );
   await this.page.waitForPageLoad();

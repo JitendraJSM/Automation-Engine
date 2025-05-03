@@ -1,0 +1,13 @@
+[
+  {
+    "parentModuleName": "test",
+    "actionName": "testFunction1",
+    "shouldStoreState": "testVar"
+  },
+  {
+    "parentModuleName": "test",
+    "actionName": "testFunction2",
+    "arguments": "Shorts,{\"text\":\"this.state.testVar\"}",
+    "shouldStoreState": "testFunctionResult"
+  }
+]
