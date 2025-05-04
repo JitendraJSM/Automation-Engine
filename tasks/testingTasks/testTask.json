@@ -2,7 +2,8 @@
   {
     "parentModuleName": "test",
     "actionName": "testFunction2",
-    "arguments": "this.Shorts,{text:testVar}",
+    "argumentsString": "#identifierId,this.state.newMemberToAdd",
+    "doParseArguments": true,
     "shouldStoreState": "testFunctionResult"
   }
 ]

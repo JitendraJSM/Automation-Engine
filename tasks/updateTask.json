@@ -29,25 +29,12 @@
   },
   {
     "parentModuleName": "page",
-    "actionName": "navigateTo",
-    "argumentsString": "https://www.youtube.com"
-  },
-  {
-    "parentModuleName": "youTube",
-    "actionName": "clickShortsBTN"
-  },
-  {
-    "parentModuleName": "youTube",
-    "actionName": "clickLikeBTN"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "clickNotClickable",
-    "argumentsString": "a ::-p-text(Sign in)"
-  },
-  {
-    "parentModuleName": "page",
     "actionName": "clickNotClickable",
     "argumentsString": "#identifierId"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
   }
 ]

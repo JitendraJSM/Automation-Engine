@@ -46,7 +46,9 @@ class App {
     this.errorHandler = null;
     // Add shared state object
     this.state = {};
-
+    // for testing purpose only
+    this.state.newMemberToAdd = {};
+    this.state.newMemberToAdd.gmail = "abcd@gmail.com";
     // console.log(`Your Automation-App (i.e. app) Instanciated.`);
   }
 

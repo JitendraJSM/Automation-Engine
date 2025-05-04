@@ -6,8 +6,13 @@ module.exports = { testFunction1, testFunction2 };
 async function testFunction1() {
   return 1056;
 }
-async function testFunction2(textOrSelector, options) {
-  // console.log(`=======Start testFunction Code=======`);
+async function testFunction2(arg1, agr2) {
+  console.log(`=======Start testFunction Code=======`);
+  console.log(`arg1 is as below:`);
+  console.log(arg1);
+  console.log(`agr2 is as below:`);
+  console.log(agr2);
+
   // console.log(`textOrSelector is : ${textOrSelector}`);
   // console.log(
   //   `Array.isArray textOrSelector is : ${Array.isArray(textOrSelector)}`
@@ -19,7 +24,7 @@ async function testFunction2(textOrSelector, options) {
   // // console.log(`options.text is : ${options?.text}`);
   // // console.log(`the state is as below:`);
   // // console.log(this.state);
-  // console.log(`=======Code Tested=======`);
+  console.log(`=======Code Tested=======`);
 }
 
 /* === below functions are for testing the Monitor module ===

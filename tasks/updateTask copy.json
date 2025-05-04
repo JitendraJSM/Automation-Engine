@@ -33,12 +33,21 @@
     "argumentsString": "https://www.youtube.com"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "clickNotClickable",
-    "argumentsString": "span.title ::-p-text(Shorts)"
+    "parentModuleName": "youTube",
+    "actionName": "clickShortsBTN"
   },
   {
     "parentModuleName": "youTube",
-    "actionName": "clickOnShortsBTN"
+    "actionName": "clickLikeBTN"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "a ::-p-text(Sign in)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
   }
 ]

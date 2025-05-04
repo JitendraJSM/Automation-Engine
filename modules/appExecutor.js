@@ -7,14 +7,23 @@
 // --------------
 // "this" in thw executeAction function is the app instance as it is called in the app by "executeAction.call(this, action)""
 function parseArgumentValue(value) {
+  console.log(`---------------value: ${value}`);
+
   if (value === "true" || value === "false") {
     return value === "true";
   } else if (!isNaN(value)) {
     return Number(value);
-  } else if (value in this) {
-    return this[value];
-  } else if (value in this.state) {
-    return this.state[value];
+  } else if (value.includes(".")) {
+    let valueArr = value.trim().split(".");
+    console.log(`valueArr after split:`);
+    console.log(valueArr);
+    console.log(this["state"]["newMemberToAdd"]["gmail"]);
+
+    if (value in this) {
+      return this[value];
+    } else if (value in this.state) {
+      return this.state[value];
+    }
   } else {
     return value;
   }
@@ -26,9 +35,11 @@ function parseArguments(argumentsString) {
   console.log(`the Splited argumentsArray:`);
   console.log(argumentsArray);
 
-  let parsedArguments = argumentsArray.map((arg) => parseArgumentValue(arg));
+  let parsedArguments = argumentsArray.map((arg) =>
+    parseArgumentValue.call(this, arg)
+  );
   console.log(`parsedArguments after looping:`);
-  console.log(parseumentsrgs);
+  console.log(parsedArguments);
 
   return parsedArguments;
 }
