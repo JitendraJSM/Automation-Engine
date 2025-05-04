@@ -22,8 +22,9 @@ exports.getBrowser = async (options) => {
   options.profileTarget ||= process.env.CHORME_TARGET_PROFILE;
   options.initialURL ||= process.env.INITIAL_URL;
   // Create some logic in future as the size & position depends on the current Machine.
-  options.windowSize ||= [814, 859];
-  options.windowPosition ||= [793, 0];
+  /* How to get current window Size and Position "window.outerWidth", "window.outerHeight", "window.screenX" & "window.screenY". */
+  options.windowSize ||= [809, 831]; // minimum size as size changes selector's also
+  options.windowPosition ||= [734, 0]; // for home-laptop
   options.environment ||= process.env.ENVIRONMENT;
 
   const wsUrl = await getDebuggerUrl(

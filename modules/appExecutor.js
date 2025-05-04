@@ -6,107 +6,41 @@
 */
 // --------------
 // "this" in thw executeAction function is the app instance as it is called in the app by "executeAction.call(this, action)""
-function checkStateReference(arg) {
+function parseArgumentValue(value) {
+  if (value === "true" || value === "false") {
+    return value === "true";
+  } else if (!isNaN(value)) {
+    return Number(value);
+  } else if (value in this) {
+    return this[value];
+  } else if (value in this.state) {
+    return this.state[value];
+  } else {
+    return value;
+  }
+}
+function parseArguments(argumentsString) {
   // console.log(this);
-  if (arg.startsWith("this")) {
-    console.log(`${arg} is a referenced argument`);
-    arg = this[arg.split(".")[1]];
-  }
-}
-function parseObject(objString) {
-  // console.log(this);
-  const obj = {};
-  console.log(`********************`);
-  console.log(`The Object string is : ${objString}`);
-  console.log(`the parsed obj is as below:`);
+  if (!argumentsString) return [];
+  let argumentsArray = argumentsString.split(",");
+  console.log(`the Splited argumentsArray:`);
+  console.log(argumentsArray);
 
-  console.log(obj);
-  console.log(`********************`);
-}
-function parseArgs(args) {
-  // console.log(this);
+  let parsedArguments = argumentsArray.map((arg) => parseArgumentValue(arg));
+  console.log(`parsedArguments after looping:`);
+  console.log(parseumentsrgs);
 
-  if (!args) return [];
-
-  // Handle single argument case
-  if (args.includes(",")) {
-    args = args.split(",");
-    // console.log(`the Splited args:`);
-    // console.log(args);
-  }
-  args.forEach((arg) => {
-    arg = arg.trim();
-    if (arg.startsWith("{")) {
-      console.log(`--- ${arg} is an object`);
-      arg = parseObject(arg);
-    } else console.log(`--- ${arg} is not an object`);
-  });
-  console.log(`args after looping:`);
-  console.log(args);
-  // Split by comma but respect JSON objects
-  let inObject = false;
-  let currentArg = "";
-  let parsedArgs = [];
-
-  for (let i = 0; i < args.length; i++) {
-    const char = args[i];
-
-    if (char === "{") inObject = true;
-    if (char === "}") inObject = false;
-
-    if (char === "," && !inObject) {
-      parsedArgs.push(tryParseValue(currentArg.trim()));
-      currentArg = "";
-    } else {
-      currentArg += char;
-    }
-  }
-
-  // Push the last argument
-  if (currentArg.trim()) {
-    parsedArgs.push(tryParseValue(currentArg.trim()));
-  }
-
-  return parsedArgs;
+  return parsedArguments;
 }
 
-function tryParseValue(value) {
-  if (!value) return value;
-
-  // Try to parse as JSON if it starts with { or [
-  if (value.startsWith("{") || value.startsWith("[")) {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      return value;
-    }
-  }
-
-  // Handle string values that reference this.state
-  if (value.startsWith("this.state.")) {
-    try {
-      return value.split(".").reduce((obj, key) => obj[key], this);
-    } catch (e) {
-      return value;
-    }
-  }
-
-  // Handle boolean values
-  if (value.toLowerCase() === "true") return true;
-  if (value.toLowerCase() === "false") return false;
-
-  // Handle numeric values
-  if (!isNaN(value)) return Number(value);
-
-  return value;
-}
 async function executeAction(actionDetails) {
   let {
     parentModuleName,
     actionName,
-    arguments: args,
+    argumentsString,
     shouldStoreState,
     continueOnError,
+    doParseArguments,
     // continueOnError = false,
   } = actionDetails;
 
@@ -127,7 +61,9 @@ async function executeAction(actionDetails) {
   }
   try {
     // Only parse as JSON if it's an object-like string
-    let parsedArgs = parseArgs.call(this, args);
+    let parsedArguments = doParseArguments
+      ? parseArguments.call(this, argumentsString)
+      : [argumentsString];
 
     // console.log(`parsed args: ${parsedArgs}`);
     // console.log(`Array.isArray parsed args: ${Array.isArray(parsedArgs)}`);
@@ -135,8 +71,8 @@ async function executeAction(actionDetails) {
     // Execute the action based on whether it's async or not
     const result =
       action.constructor.name === "AsyncFunction"
-        ? await action.call(this, ...parsedArgs)
-        : action.call(this, parsedArgs);
+        ? await action.call(this, ...parsedArguments)
+        : action.call(this, ...parsedArguments);
 
     // Store result in state if specified
     shouldStoreState ||= action.shouldStoreState;

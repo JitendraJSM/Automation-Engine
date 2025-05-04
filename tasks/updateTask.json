@@ -29,11 +29,25 @@
   },
   {
     "parentModuleName": "page",
-    "actionName": "clickNotClickeable",
-    "arguments": "\"Shorts\", \"span.title\""
+    "actionName": "navigateTo",
+    "argumentsString": "https://www.youtube.com"
   },
   {
     "parentModuleName": "youTube",
-    "actionName": "clickOnShortsBTN"
+    "actionName": "clickShortsBTN"
+  },
+  {
+    "parentModuleName": "youTube",
+    "actionName": "clickLikeBTN"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "a ::-p-text(Sign in)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "#identifierId"
   }
 ]

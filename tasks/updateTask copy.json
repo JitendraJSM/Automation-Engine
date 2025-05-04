@@ -30,12 +30,12 @@
   {
     "parentModuleName": "page",
     "actionName": "navigateTo",
-    "arguments": "https://www.youtube.com"
+    "argumentsString": "https://www.youtube.com"
   },
   {
     "parentModuleName": "page",
     "actionName": "clickNotClickable",
-    "arguments": "\"Shorts\", \"span.title\""
+    "argumentsString": "span.title ::-p-text(Shorts)"
   },
   {
     "parentModuleName": "youTube",
