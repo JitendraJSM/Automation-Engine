@@ -29,7 +29,16 @@
   },
   {
     "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "arguments": "https://www.youtube.com"
+  },
+  {
+    "parentModuleName": "page",
     "actionName": "clickNotClickable",
-    "arguments": "Shorts"
+    "arguments": "\"Shorts\", \"span.title\""
+  },
+  {
+    "parentModuleName": "youTube",
+    "actionName": "clickOnShortsBTN"
   }
 ]

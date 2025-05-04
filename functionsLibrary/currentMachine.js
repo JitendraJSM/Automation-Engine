@@ -3,7 +3,6 @@ module.exports = {
   getCurrentMachineName,
   isChromeAlreadyOpened,
   getNextAvailableChromeProfile,
-  testforArgs,
 };
 // === Implementation ===
 const os = require("os");
@@ -28,13 +27,6 @@ function getNextAvailableChromeProfile() {
   return nextProfileNumber;
 }
 getNextAvailableChromeProfile.shouldStoreState = "nextAvailableChromeProfile";
-
-function testforArgs(args) {
-  console.log(`testforArgs function started.`);
-
-  console.log(`type of arugments is ${typeof arugments}`);
-  console.log(args);
-}
 
 /* Note:- This function must be called before chrome.initializeBrowser() */
 // -- As it is so much dependent on chrome.initializeBrowser() why merge this in that function, what if it needed separately let's think about this in future.

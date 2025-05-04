@@ -1,7 +1,8 @@
 [
   {
     "parentModuleName": "test",
-    "actionName": "testFunction",
+    "actionName": "testFunction2",
+    "arguments": "this.Shorts,{text:testVar}",
     "shouldStoreState": "testFunctionResult"
   }
 ]

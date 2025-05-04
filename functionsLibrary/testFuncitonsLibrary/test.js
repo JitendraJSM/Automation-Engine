@@ -1,13 +1,25 @@
 // === InterFace ===
-module.exports = { testFunction };
+module.exports = { testFunction1, testFunction2 };
 
 // === Implementations ===
 
-async function testFunction(args) {
-  console.log(`=======Start testFunction Code=======`);
-  // console.log(args);
-
-  console.log(`=======Code Tested=======`);
+async function testFunction1() {
+  return 1056;
+}
+async function testFunction2(textOrSelector, options) {
+  // console.log(`=======Start testFunction Code=======`);
+  // console.log(`textOrSelector is : ${textOrSelector}`);
+  // console.log(
+  //   `Array.isArray textOrSelector is : ${Array.isArray(textOrSelector)}`
+  // );
+  // console.log(`type of textOrSelector is : ${typeof textOrSelector}`);
+  // // console.log(`type of textOrSelector is : ${typeof textOrSelector}`);
+  // console.log(`options is as below :`);
+  // console.log(options);
+  // // console.log(`options.text is : ${options?.text}`);
+  // // console.log(`the state is as below:`);
+  // // console.log(this.state);
+  // console.log(`=======Code Tested=======`);
 }
 
 /* === below functions are for testing the Monitor module ===

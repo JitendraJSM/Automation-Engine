@@ -36,6 +36,7 @@ class App {
     this.youTube = youTube;
 
     this.test = test;
+    this.Shorts = "radhe";
     // == Modules ==
     this.monitor = new Monitor();
 
