@@ -7,7 +7,7 @@
   {
     "parentModuleName": "test",
     "actionName": "testFunction2",
-    "arguments": "Shorts,{\"text\":\"this.state.testVar\"}",
+    "arguments": "Shorts,{text:this.state.testVar}",
     "shouldStoreState": "testFunctionResult"
   }
 ]

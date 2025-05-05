@@ -65,8 +65,7 @@ async function navigateTo(url) {
 // ==========================================================================
 async function waitForElementRobust(textOrSelector, text) {
   text = false;
-  let selectorString =
-    text === true ? `::-p-text(${textOrSelector})` : textOrSelector;
+  let selectorString = text === true ? `::-p-text(${textOrSelector})` : textOrSelector;
 
   const element = await this.page.locator(selectorString).waitHandle();
   if (!element) {
@@ -92,10 +91,7 @@ async function clickNotClickable(textOrSelectorOrElement, text) {
   await this.utils.randomDelay(0.75);
 
   const waitSearchnClick = async (page, textOrSelectorOrElement, text) => {
-    let element =
-      typeof textOrSelectorOrElement === "string"
-        ? await page.waitForElementRobust(textOrSelectorOrElement, text)
-        : textOrSelectorOrElement;
+    let element = typeof textOrSelectorOrElement === "string" ? await page.waitForElementRobust(textOrSelectorOrElement, text) : textOrSelectorOrElement;
 
     const boundingBox = await element.boundingBox();
     if (boundingBox) {
@@ -103,8 +99,7 @@ async function clickNotClickable(textOrSelectorOrElement, text) {
       await page.mouse.click(x + width / 2, y + height / 2);
       // await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
       return true; // Exit on success
-    } else
-      throw Error(`Bounding Box not found for: ${textOrSelectorOrElement}.`);
+    } else throw Error(`Bounding Box not found for: ${textOrSelectorOrElement}.`);
   };
 
   await this.utils.robustPolling(
@@ -149,11 +144,7 @@ async function typeHuman(selector, stringToType) {
 
   for (let char of stringToType) {
     // Simulate typing delay
-    const delay =
-      Math.floor(
-        Math.random() *
-          (options.maximumDelayInMs - options.minimumDelayInMs + 1)
-      ) + options.minimumDelayInMs;
+    const delay = Math.floor(Math.random() * (options.maximumDelayInMs - options.minimumDelayInMs + 1)) + options.minimumDelayInMs;
 
     // Introduce a typo based on the typo chance
     let typedChar = char;
@@ -171,14 +162,8 @@ async function typeHuman(selector, stringToType) {
         await inputField.type(typedChar, { delay });
 
         // Simulate backspacing to remove the typo
-        const backspaceDelay =
-          Math.floor(
-            Math.random() *
-              (options.backspaceMaximumDelayInMs -
-                options.backspaceMinimumDelayInMs +
-                1)
-          ) + options.backspaceMinimumDelayInMs;
-        await utils.delay(backspaceDelay);
+        const backspaceDelay = Math.floor(Math.random() * (options.backspaceMaximumDelayInMs - options.backspaceMinimumDelayInMs + 1)) + options.backspaceMinimumDelayInMs;
+        await this.utils.delay(backspaceDelay);
 
         // Type backspace to remove the last character (the typo)
         await inputField.press("Backspace", { delay: backspaceDelay });
@@ -196,9 +181,7 @@ async function typeHuman(selector, stringToType) {
 
 async function checkVisibilityBeforeClick(selector) {
   return await this.page.evaluate((selector) => {
-    const subBTN = Array.from(document.querySelectorAll(selector)).find((el) =>
-      el.checkVisibility()
-    );
+    const subBTN = Array.from(document.querySelectorAll(selector)).find((el) => el.checkVisibility());
     // subBTN.click();
     // return subBTN.textContent;
     return subBTN;
@@ -218,12 +201,7 @@ async function checkVisibilityBeforeClick(selector) {
  * @param {number} timeoutMs - The timeout in milliseconds after which the method will return false. Default is 30000.
  * @returns {(string | false)} The new URL if the URL changed, false otherwise.
  */
-async function waitForURLChange(
-  beforePageURL,
-  maxAttempts = 5,
-  delayMs = 3000,
-  timeoutMs = 30000
-) {
+async function waitForURLChange(beforePageURL, maxAttempts = 5, delayMs = 3000, timeoutMs = 30000) {
   let flag;
   try {
     flag = await utils.robustPolling(

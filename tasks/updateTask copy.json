@@ -30,7 +30,8 @@
   {
     "parentModuleName": "page",
     "actionName": "navigateTo",
-    "argumentsString": "https://www.youtube.com"
+    "argumentsString": "https://www.youtube.com",
+    "doNotParseArgumentString": true
   },
   {
     "parentModuleName": "youTube",
@@ -49,5 +50,20 @@
     "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Next)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "input[type=\"password\"],hhjsm001"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Show)"
   }
 ]

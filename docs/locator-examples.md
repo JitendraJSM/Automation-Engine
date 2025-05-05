@@ -69,10 +69,10 @@ Creates an expectation that is evaluated against located values. The filter meth
 
 ```javascript
 // Filter by text content
-const submitButton = page.locator("button").filter({ hasText: "Submit" });
-const partialTextMatch = page
-  .locator("div")
-  .filter({ hasText: /Product\s+\d+/ }); // Regex support
+const submitButton = page.locator("button").filter({ hasText: "Submit" }); //---- Not Working
+// But   const submitButton = this.page.locator("a ::-p-text(More information...)"); works
+// and this works const submitButton = this.page.locator("a").filter((el) => el.innerText === "More information...");
+const partialTextMatch = page.locator("div").filter({ hasText: /Product\s+\d+/ }); // Regex support
 
 // Filter by element state
 const enabledButton = page.locator("button").filter({ state: "enabled" });
@@ -81,18 +81,11 @@ const attachedElements = page.locator("div").filter({ state: "attached" });
 const editableFields = page.locator("div").filter({ state: "editable" });
 
 // Filter by attributes
-const requiredInputs = page
-  .locator("input")
-  .filter({ has: page.locator("[required]") });
-const blueButtons = page
-  .locator("button")
-  .filter({ has: page.locator('[style*="blue"]') });
+const requiredInputs = page.locator("input").filter({ has: page.locator("[required]") });
+const blueButtons = page.locator("button").filter({ has: page.locator('[style*="blue"]') });
 
 // Combining multiple filters
-const activeVisibleLink = page
-  .locator("a")
-  .filter({ state: "visible" })
-  .filter({ hasText: "Active" });
+const activeVisibleLink = page.locator("a").filter({ state: "visible" }).filter({ hasText: "Active" });
 
 // Custom filter function
 const elementsInViewport = page.locator("div").filter(async (element) => {
@@ -102,26 +95,16 @@ const elementsInViewport = page.locator("div").filter(async (element) => {
 });
 
 // Filter with not operator
-const nonDisabledButtons = page
-  .locator("button")
-  .filter({ state: "visible", not: { state: "disabled" } });
+const nonDisabledButtons = page.locator("button").filter({ state: "visible", not: { state: "disabled" } });
 
 // Filter by child elements
 const listsWithImages = page.locator("ul").filter({ has: page.locator("img") });
-const formsWithRequiredFields = page
-  .locator("form")
-  .filter({ has: page.locator("[required]") });
+const formsWithRequiredFields = page.locator("form").filter({ has: page.locator("[required]") });
 
 // Chaining filters with other locator methods
-const lastVisibleButton = page
-  .locator("button")
-  .filter({ state: "visible" })
-  .last();
+const lastVisibleButton = page.locator("button").filter({ state: "visible" }).last();
 
-const firstEditableInput = page
-  .locator("input")
-  .filter({ state: "editable" })
-  .first();
+const firstEditableInput = page.locator("input").filter({ state: "editable" }).first();
 ```
 
 ### 7. map()
@@ -149,10 +132,7 @@ const clonedLocator = originalLocator.clone();
 
 ```javascript
 // Find a specific item in a list
-const listItem = page
-  .locator("ul.shopping-list")
-  .locator("li")
-  .filter({ hasText: "Apple" });
+const listItem = page.locator("ul.shopping-list").locator("li").filter({ hasText: "Apple" });
 
 await listItem.click();
 ```
@@ -181,12 +161,7 @@ await closeButton.click();
 
 ```javascript
 // Find a specific table cell
-const cell = page
-  .locator("table")
-  .locator("tr")
-  .filter({ hasText: "Product A" })
-  .locator("td")
-  .filter({ hasText: "$" });
+const cell = page.locator("table").locator("tr").filter({ hasText: "Product A" }).locator("td").filter({ hasText: "$" });
 
 const price = await cell.textContent();
 ```
@@ -206,10 +181,7 @@ const submitButton = page.locator("button");
 2. **Chain Locators for Complex Selection**: Break down complex element selection into multiple steps.
 
 ```javascript
-const specificRow = page
-  .locator("table#users")
-  .locator("tr")
-  .filter({ hasText: "John" });
+const specificRow = page.locator("table#users").locator("tr").filter({ hasText: "John" });
 ```
 
 3. **Handle Dynamic Content**: Use wait() when dealing with dynamic elements.
@@ -350,12 +322,7 @@ const inViewportButton = page.locator("button").filter(async (element) => {
   const isVisible = await element.isVisible();
   const box = await element.boundingBox();
 
-  return (
-    isVisible &&
-    box &&
-    box.y >= 0 &&
-    box.y <= (await page.viewportSize()).height
-  );
+  return isVisible && box && box.y >= 0 && box.y <= (await page.viewportSize()).height;
 });
 ```
 
@@ -445,11 +412,7 @@ Locators automatically check element state before actions:
 
 ```javascript
 // Break down complex selections
-const row = page
-  .locator("table")
-  .locator("tr")
-  .filter({ hasText: "Product" })
-  .first();
+const row = page.locator("table").locator("tr").filter({ hasText: "Product" }).first();
 
 // Add explicit waits for critical operations
 await row.wait();

@@ -1,9 +1,7 @@
 [
   {
     "parentModuleName": "test",
-    "actionName": "testFunction2",
-    "argumentsString": "#identifierId,this.state.newMemberToAdd",
-    "doParseArguments": true,
+    "actionName": "testFunction1",
     "shouldStoreState": "testFunctionResult"
   }
 ]

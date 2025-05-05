@@ -36,7 +36,6 @@ class App {
     this.youTube = youTube;
 
     this.test = test;
-    this.Shorts = "radhe";
     // == Modules ==
     this.monitor = new Monitor();
 
@@ -46,9 +45,6 @@ class App {
     this.errorHandler = null;
     // Add shared state object
     this.state = {};
-    // for testing purpose only
-    this.state.newMemberToAdd = {};
-    this.state.newMemberToAdd.gmail = "abcd@gmail.com";
     // console.log(`Your Automation-App (i.e. app) Instanciated.`);
   }
 
@@ -63,9 +59,7 @@ class App {
       // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
 
       if (this.errorHandler == null) {
-        console.log(
-          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
-        );
+        console.log(`Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`);
         // console.log(error);
       } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
@@ -100,9 +94,7 @@ class App {
         // Only return result if it should be stored in state
         return shouldStoreState ? result : undefined;
       } catch (error) {
-        await utils.log(
-          `Action '${actionName}' failed with error: ${error.message}`
-        );
+        await utils.log(`Action '${actionName}' failed with error: ${error.message}`);
         throw error;
       }
     };

@@ -30,11 +30,6 @@
   {
     "parentModuleName": "page",
     "actionName": "clickNotClickable",
-    "argumentsString": "#identifierId"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "typeHuman",
-    "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
+    "argumentsString": "::-p-text(Next)"
   }
 ]
