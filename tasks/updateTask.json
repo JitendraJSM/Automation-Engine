@@ -26,10 +26,5 @@
   {
     "parentModuleName": "page",
     "actionName": "waitForPageLoad"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "clickNotClickable",
-    "argumentsString": "::-p-text(Next)"
   }
 ]

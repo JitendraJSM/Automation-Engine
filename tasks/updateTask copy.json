@@ -65,5 +65,10 @@
     "parentModuleName": "page",
     "actionName": "clickNotClickable",
     "argumentsString": "::-p-text(Show)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Next)"
   }
 ]

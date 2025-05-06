@@ -59,7 +59,9 @@ class App {
       // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
 
       if (this.errorHandler == null) {
-        console.log(`Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`);
+        console.log(
+          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
+        );
         // console.log(error);
       } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
@@ -69,6 +71,8 @@ class App {
 
   async run(task) {
     // Handle both single task and array of tasks
+    console.log(`************** ${task.name} is running.`);
+
     const actionsArray = Array.isArray(task) ? task : [task];
 
     // Execute each action sequentially
@@ -94,7 +98,9 @@ class App {
         // Only return result if it should be stored in state
         return shouldStoreState ? result : undefined;
       } catch (error) {
-        await utils.log(`Action '${actionName}' failed with error: ${error.message}`);
+        await utils.log(
+          `Action '${actionName}' failed with error: ${error.message}`
+        );
         throw error;
       }
     };
