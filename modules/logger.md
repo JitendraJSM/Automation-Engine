@@ -9,17 +9,37 @@
       - if completed without error: "--------- Successful Execution ---------" .
       - if completed with error: "--------- Failed Execution ---------"
       - if terminated by user: "--------- Terminated Execution ---------"
+5.  A method on app named as "log" when called will log the message.
+6.  A method on app named as "logError" when called will log the message and the error.
+7.  A method on app named as "logTask" when called will log the task name and the task actions.
+8.  A method on app named as "logTaskResult" when called will log the task result.
 
 # Description
 
 # Examples
+
+Suppose in current execution, in index.js the first call to app.run() is as "await app.run(updateTask);", so the this.task.taskName = "updateTask"
 
 let a file name be "23-06-22 15-30-00"
 the file content should be:
 
 ```
 23-06-22 15-30-00
-    Task-1:
+    Task-1: updateTask
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName"
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd"
+  },
+  .
+  .
+  .
+  ...compltete updateTask
+]
 
 
 00 minutes & 00 seconds

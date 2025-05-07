@@ -11,6 +11,7 @@
 // === Base Imports ===
 const Monitor = require("./MonitorModule.js");
 const executeAction = require("./appExecutor.js");
+const LoggerModule = require("../modules/LoggerModule.js");
 const utils = require("../utils/utils.js");
 
 // === Functions Library Imports ===
@@ -43,6 +44,7 @@ class App {
     this.actionList = [];
     this.currentActionIndex = 0;
     this.errorHandler = null;
+
     // Add shared state object
     this.state = {};
     // console.log(`Your Automation-App (i.e. app) Instanciated.`);
@@ -59,9 +61,7 @@ class App {
       // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
 
       if (this.errorHandler == null) {
-        console.log(
-          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
-        );
+        console.log(`Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`);
         // console.log(error);
       } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
@@ -71,12 +71,13 @@ class App {
 
   async run(task) {
     // Handle both single task and array of tasks
-    console.log(`************** ${task.name} is running.`);
+    this.task = Array.isArray(task) ? task : [task];
 
-    const actionsArray = Array.isArray(task) ? task : [task];
+    if (this.task.log !== false) this.logger = new LoggerModule(this);
 
     // Execute each action sequentially
-    for (const action of actionsArray) {
+    for (const action of this.task) {
+      this.currentAction = action;
       await executeAction.call(this, action);
     }
   }
@@ -98,9 +99,7 @@ class App {
         // Only return result if it should be stored in state
         return shouldStoreState ? result : undefined;
       } catch (error) {
-        await utils.log(
-          `Action '${actionName}' failed with error: ${error.message}`
-        );
+        await utils.log(`Action '${actionName}' failed with error: ${error.message}`);
         throw error;
       }
     };

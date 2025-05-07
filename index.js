@@ -3,10 +3,13 @@ require("dotenv").config();
 const App = require("./modules/AppModule.js");
 
 // === Tasks ===
-const updateSystem = require("./tasks/updateTask.json");
+const updateTask = require("./tasks/updateTask.json");
+updateTask.taskName = "updateTask";
 
 // === Testing Tasks ===
 const testTask = require("./tasks/testingTasks/testTask.json");
+testTask.taskName = "testTask";
+// testTask.log = false; // only false stops the logging, even not defining the log will makes it log
 
 async function main() {
   console.log(`Main function Started.`);
@@ -15,18 +18,14 @@ async function main() {
 
   // ------------------ Testing purpose ---------------------------
   // await app.run(testTask);
-  console.log(`--------module`);
-  // console.log(Object.keys(require));
-  // console.log(module.children[2]);
-
   await app.run(updateTask);
   // console.log(`${app.state.currentMachine} is the current machine.`);
   // console.log(`${app.state.newMemberToAdd} are member to add from api.`);
   // console.log(`app.state is as below : `);
   // console.log(app.state);
 
-  console.log(`app is as below : `);
-  console.log(app);
+  // console.log(`app is as below : `);
+  // console.log(app);
 
   // console.log(`New member to add is as below :`);
   // console.log(app.state.newMemberToAdd);
