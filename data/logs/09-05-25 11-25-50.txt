@@ -1,0 +1,33 @@
+09-05-25 11-25-50
+    Task-1: updateTask
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName"
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "isChromeAlreadyOpened"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "initializeBrowser"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "privacySandboxHandler"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  }
+]
+

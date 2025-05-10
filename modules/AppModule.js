@@ -11,7 +11,7 @@
 // === Base Imports ===
 const Monitor = require("./MonitorModule.js");
 const executeAction = require("./appExecutor.js");
-const LoggerModule = require("../modules/LoggerModule.js");
+const loggerInit = require("../functionsLibrary/logger.js");
 const utils = require("../utils/utils.js");
 
 // === Functions Library Imports ===
@@ -39,6 +39,7 @@ class App {
     this.test = test;
     // == Modules ==
     this.monitor = new Monitor();
+    this.logger = { isLogger: false };
 
     // == Automation data ==
     this.actionList = [];
@@ -73,11 +74,11 @@ class App {
     // Handle both single task and array of tasks
     this.task = Array.isArray(task) ? task : [task];
 
-    if (this.task.log !== false) this.logger = new LoggerModule(this);
-
+    if (this.task.log !== false) loggerInit.call(this);
     // Execute each action sequentially
     for (const action of this.task) {
       this.currentAction = action;
+      this.logger.logAction();
       await executeAction.call(this, action);
     }
   }
