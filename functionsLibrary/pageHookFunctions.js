@@ -26,6 +26,19 @@ async function hookMethodsOnPage(page) {
   page.typeHuman = typeHuman.bind(this);
   page.checkVisibilityBeforeClick = checkVisibilityBeforeClick.bind(this);
   page.waitForURLChange = waitForURLChange.bind(this);
+
+  // ==== 👇🏻 for Testing & Debugging 👇🏻 ====
+  page.listAllPages = listAllPages.bind(this);
+  page.listAllFrames = listAllFrames.bind(this);
+  page.listAllElements = listAllElements.bind(this);
+  page.listAllElementsText = listAllElementsText.bind(this);
+  page.listAllElementsTextAndSelector = listAllElementsTextAndSelector.bind(this);
+  // ==== 👇🏻 Event Handler 👇🏻 ====
+  page.on("framenavigated", (frame) => {
+    if (frame === page.mainFrame()) {
+      this.logger.logMSG(`Navigated to: ${frame.url()}`);
+    }
+  });
 }
 
 /*  1. waitForPageLoad(options)
@@ -62,7 +75,7 @@ async function navigateTo(url) {
     console.log(`Error in app.page.navigateTo(${url}) is as: ${error.message}`);
   }
 }
-// ==========================================================================
+// ==== 👇🏻 for Testing & Debugging 👇🏻 ====
 async function waitForElementRobust(textOrSelector, text) {
   text = false;
   let selectorString = text === true ? `::-p-text(${textOrSelector})` : textOrSelector;
@@ -273,3 +286,43 @@ async function log(type = "act", message) {
   await utils.log(`${prefix}: ${message}`);
 }
 */
+
+// ==== 👇🏻 for Testing & Debugging 👇🏻 ====
+async function listAllPages() {
+  const pages = await this.browser.pages();
+  for (const page of pages) {
+    console.log(`Page URL: ${page.url()}`);
+  }
+}
+
+async function listAllFrames() {
+  const frames = this.page.frames();
+  for (const frame of frames) {
+    console.log(`Frame URL: ${frame.url()}`);
+  }
+}
+async function listAllElements() {
+  const elements = await this.page.$$("*");
+  for (const element of elements) {
+    const tagName = await element.evaluate((el) => el.tagName);
+    console.log(`Element: ${tagName}`);
+  }
+}
+
+async function listAllElementsText() {
+  const elements = await this.page.$$("*");
+  for (const element of elements) {
+    const tagName = await element.evaluate((el) => el.tagName);
+    const textContent = await element.evaluate((el) => el.textContent);
+    console.log(`Element: ${tagName}, Text: ${textContent}`);
+  }
+}
+async function listAllElementsTextAndSelector() {
+  const elements = await this.page.$$("*");
+  for (const element of elements) {
+    const tagName = await element.evaluate((el) => el.tagName);
+    const textContent = await element.evaluate((el) => el.textContent);
+    const selector = await element.evaluate((el) => el.outerHTML);
+    console.log(`Element: ${tagName}, Text: ${textContent}, Selector: ${selector}`);
+  }
+}

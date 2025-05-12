@@ -25,18 +25,16 @@ async function privacySandboxHandler() {
     retryCondition: (result) => result === true,
     endMSG: "Only 1 page found, means Privacy Sandbox Popup is not opened.",
   });
-  console.log(`flag: ${flag}`);
+  console.log(`flag: ${flag ? `more than 1 page found` : `only 1 page found`}`);
   await this.utils.randomDelay(1.5, 1.0);
   // ============================================================
   if (flag) {
     // 3. Check for Pivacy SandBox Popup
-    let privacySandBoxPage = (await this.browser.pages()).find(
-      (p) => p.url() === "chrome://privacy-sandbox-dialog/notice"
-    );
-    await privacySandBoxPage
-      .locator("privacy-sandbox-notice-dialog-app >>> #ackButton")
-      .click();
-    console.log(`Privacy SandBox Popup Closed`);
+    let privacySandBoxPage = (await this.browser.pages()).find((p) => p.url() === "chrome://privacy-sandbox-dialog/notice");
+    if (privacySandBoxPage) {
+      await privacySandBoxPage.locator("privacy-sandbox-notice-dialog-app >>> #ackButton").click();
+      console.log(`Privacy SandBox Popup Closed`);
+    }
 
     // 4. Check for SignIn Popup
     /*    let SignInPage = (await browser.pages()).find((p) =>
@@ -54,14 +52,41 @@ async function privacySandboxHandler() {
 
 async function popUpHandler() {
   // await privacySandboxHandler();
-  // console.log(`Popup handler called`);
+  console.log(`Popup handler attached to browser.`);
   // await privacySandboxHandler.call(this);
-  // For a one-time detection of a new page
-  //   browser.once("targetcreated", async (target) => {
-  //     if (target.type() === "page") {
-  //       const newPage = await target.page();
-  //       console.log("New page created:", await newPage.url());
-  //       return newPage;
-  //     }
-  //   });
+  // For Detection of a new page that can be a popup
+  let handlers = {
+    // url:"selectorStringToClick"
+    "chrome://privacy-sandbox-dialog/notice": "privacy-sandbox-notice-dialog-app >>> #ackButton",
+    "chrome://signin-dice-web-intercept.top-chrome/chrome-signin": "chrome-signin-app >>> #accept-button",
+  };
+
+  this.browser.on("targetcreated", async (target) => {
+    if (target.type() === "page") {
+      // const newPage = await target.page();
+      // console.log("New page created:", await newPage.url());
+      let newPopupPage;
+      Object.keys(handlers).forEach(async (url) => {
+        console.log(`-=-==-=-=-==-=-=-=-=-=-=-=-=-=-=-=`);
+        console.log(`checking for: ${url}`);
+        await this.page.listAllPages();
+
+        newPopupPage = (await this.browser.pages()).find((p) => p.url() === url);
+        if (newPopupPage) console.log(`Popup detected: ${url}`);
+        let selector = handlers[url];
+        console.log(`let's Click ${selector}`);
+        console.log(`-=-==-=-=-==-=- newPopupPage: ${newPopupPage} -=-=-=-=-=-=-=-=-=-=`);
+        // await newPopupPage.locator(selector).click();
+
+        // if (newPage.url().includes(url)) {
+        //   console.log(`Popup detected: ${url}`);
+        //   let selector = handlers[url];
+        //   // await newPage.locator(selector).click();
+        //   console.log(`let's Click ${selector}`);
+        //   // console.log(`Popup Closed: ${url}`);
+        // }
+      });
+      return newPopupPage;
+    }
+  });
 }

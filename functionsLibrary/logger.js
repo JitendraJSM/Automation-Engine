@@ -19,10 +19,8 @@ function loggerInit() {
     fs.writeFileSync(this.state.logFilePath, `${timestamp}\n    Task-1: ${this.task.taskName}\n`);
     this.logger.logTask();
   }
-
-  console.log(`-------`);
-  this.logger.isLogger = true;
-  this.logger.log = log.bind(this);
+  this.logger.logMSG = logMSG.bind(this);
+  this.logger.logLineBreak = logLineBreak.bind(this);
   this.logger.logError = logError.bind(this);
   this.logger.logTask = logTask.bind(this);
   this.logger.logAction = logAction.bind(this);
@@ -52,16 +50,13 @@ function _getExecutionTime() {
   return `${String(minutes).padStart(2, "0")} minutes & ${String(seconds).padStart(2, "0")} seconds`;
 }
 
-function log(message) {
+function logMSG(message) {
   if (!this.state.logFilePath) return;
   fs.appendFileSync(this.state.logFilePath, `${message}\n`);
 }
-function logAction() {
-  if (!this.logger.isLogger) {
-    console.log(`logger isn't instainciated.`);
-    return;
-  }
-  this.currentAction;
+function logLineBreak() {
+  let lineBreak = `===================================================================================`;
+  this.logger.logMSG(lineBreak);
 }
 function logError(message, error) {
   if (!this.state.logFilePath) return;
@@ -72,12 +67,15 @@ function logError(message, error) {
 function logTask() {
   if (!this.state.logFilePath) return;
   fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.task, null, 2) + "\n\n");
+  this.logger.logLineBreak();
 }
 
 function logAction() {
   if (!this.state.logFilePath) return;
   fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.currentAction, null, 2) + "\n\n");
+  this.logger.logLineBreak();
 }
+
 function logTaskResult(status = "success") {
   if (!this.state.logFilePath) return;
   const executionTime = _getExecutionTime();

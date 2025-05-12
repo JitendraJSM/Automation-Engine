@@ -39,7 +39,7 @@ class App {
     this.test = test;
     // == Modules ==
     this.monitor = new Monitor();
-    this.logger = { isLogger: false };
+    this.logger = {};
 
     // == Automation data ==
     this.actionList = [];
@@ -78,7 +78,6 @@ class App {
     // Execute each action sequentially
     for (const action of this.task) {
       this.currentAction = action;
-      this.logger.logAction();
       await executeAction.call(this, action);
     }
   }

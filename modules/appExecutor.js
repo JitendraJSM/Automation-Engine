@@ -65,8 +65,9 @@ async function executeAction(actionDetails) {
     throw new Error(`Action ${actionName} not found in module ${parentModuleName}`);
   }
   try {
-    // Only parse as JSON if it's an object-like string
+    await this.utils.randomDelay(3, 1);
 
+    // Only parse as JSON if it's an object-like string
     let parsedArguments = doNotParseArgumentString ? [argumentsString] : parseArguments.call(this, argumentsString);
 
     // console.log(`parsed args: ${parsedArgs}`);
@@ -79,7 +80,10 @@ async function executeAction(actionDetails) {
     shouldStoreState ||= action.shouldStoreState;
     if (shouldStoreState && result !== undefined) {
       this.state[shouldStoreState] = result;
+      this.currentAction[shouldStoreState] = result;
+      // this.logger.logMSG(`${shouldStoreState}:${result}\n`);
     }
+    this.logger.logAction();
 
     return result;
   } catch (error) {

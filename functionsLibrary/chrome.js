@@ -20,6 +20,7 @@ async function initializeBrowser() {
     // Initialize browser and page
     const result = await getBrowser(this.state.browserOptions);
     this.browser = result.browser;
+    this.popUpFunctions.popUpHandler.call(this);
     this.page = result.page;
     hookMethodsOnPage.call(this, this.page);
 
