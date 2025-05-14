@@ -21,7 +21,7 @@
   },
   {
     "parentModuleName": "popUpFunctions",
-    "actionName": "privacySandboxHandler"
+    "actionName": "popUpHandler"
   },
   {
     "parentModuleName": "page",
@@ -58,6 +58,10 @@
   },
   {
     "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "input[type=\"password\"],hhjsm001"
   },
@@ -70,5 +74,13 @@
     "parentModuleName": "page",
     "actionName": "clickNotClickable",
     "argumentsString": "::-p-text(Next)"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "popUpHandler"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "printAllPagesURLs"
   }
 ]

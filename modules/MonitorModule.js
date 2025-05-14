@@ -5,22 +5,13 @@ class Monitor {
   pollingTaskNameGenerator(functionName) {
     if (!functionName) return `anonymous_${Date.now()}`;
 
-    let existingCount = Object.keys(this.pollingTasks).filter((taskName) =>
-      taskName.startsWith(`${functionName}_`)
-    ).length;
+    let existingCount = Object.keys(this.pollingTasks).filter((taskName) => taskName.startsWith(`${functionName}_`)).length;
 
     return `${functionName}_${existingCount + 1}`;
   }
 
   robustPolling(func, options = {}, ...args) {
-    const {
-      maxAttempts = 30,
-      intervalMs = 1000,
-      timeoutMs = 30000,
-      retryCondition = () => true,
-      rejectOnEnd = true,
-      infintiePolling = false,
-    } = options;
+    const { maxAttempts = 30, intervalMs = 1000, timeoutMs = 30000, retryCondition = () => true, rejectOnEnd = true, infintiePolling = false } = options;
 
     let pollingTaskName = this.pollingTaskNameGenerator(func.name);
 
@@ -41,15 +32,10 @@ class Monitor {
           }
         } catch (err) {
           const errMSG = err.message || "Error msg not defined";
-          console.log(
-            `Task ${pollingTaskName} - Attempt ${attempts} failed with error:`,
-            errMSG
-          );
+          console.log(`Task ${pollingTaskName} - Attempt ${attempts} failed with error:`, errMSG);
         }
 
-        const shouldStop =
-          !infintiePolling &&
-          (attempts >= maxAttempts || Date.now() - startTime >= timeoutMs);
+        const shouldStop = !infintiePolling && (attempts >= maxAttempts || Date.now() - startTime >= timeoutMs);
 
         if (shouldStop) {
           clearInterval(intervalFun);
@@ -69,7 +55,7 @@ class Monitor {
         stop: () => {
           clearInterval(intervalFun);
           delete this.pollingTasks[pollingTaskName];
-          resolve({ pollingTaskName, stopped: true });
+          resolve({ pollingTaskName, stoppedNotResolved: true });
         },
       };
       this.pollingTasks[pollingTaskName] = controller;

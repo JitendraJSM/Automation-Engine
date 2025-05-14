@@ -20,11 +20,11 @@
     "actionName": "initializeBrowser"
   },
   {
-    "parentModuleName": "popUpFunctions",
-    "actionName": "privacySandboxHandler"
-  },
-  {
     "parentModuleName": "page",
     "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "popUpHandler"
   }
 ]
