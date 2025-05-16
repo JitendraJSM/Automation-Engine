@@ -1,0 +1,34 @@
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName"
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "isChromeAlreadyOpened"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "initializeBrowser"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "popUpHandler"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "printAllPagesURLs"
+  }
+]

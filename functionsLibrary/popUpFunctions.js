@@ -59,11 +59,11 @@ module.exports = {
 async function popUpHandler() {
   const monitorPopUpPromise = this.monitor.robustPolling(this.popUpFunctions.monitorPopUp.bind(this), {
     infintiePolling: true,
-    intervalMs: 5000, // Check every 5 seconds
+    intervalMs: 3000, // Check every 5 seconds
   });
   setTimeout(() => {
     monitorPopUpPromise.stop();
-  }, 20000);
+  }, 25000);
 
   monitorPopUpPromise
     .then((result) => {
@@ -75,12 +75,16 @@ async function popUpHandler() {
 }
 
 async function monitorPopUp() {
+  console.log(`==== List of pages when Monitor PopUp called====`);
+  await this.chrome.printAllPagesURLs.call(this);
+  console.log(`================================================`);
+
   for (const url of Object.keys(handlers)) {
     try {
       const popUpPage = (await this.browser.pages()).find((p) => p.url() === url);
 
       if (popUpPage) {
-        await this.utils.randomDelay(3.0, 4.5); // Add a small delay for stability
+        await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
         console.log(`Popup Page found: ${popUpPage.url()}`);
         const selector = handlers[url];
         console.log(`Selector: ${selector}`);

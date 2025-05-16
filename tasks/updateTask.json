@@ -20,11 +20,87 @@
     "actionName": "initializeBrowser"
   },
   {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "popUpHandler"
+  },
+  {
     "parentModuleName": "page",
     "actionName": "waitForPageLoad"
   },
   {
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "argumentsString": "https://www.youtube.com",
+    "doNotParseArgumentString": true
+  },
+  {
+    "parentModuleName": "youTube",
+    "actionName": "clickShortsBTN"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "youTube",
+    "actionName": "clickLikeBTN"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "a ::-p-text(Sign in)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Next)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "input[type=\"password\"],hhjsm001"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Show)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "clickNotClickable",
+    "argumentsString": "::-p-text(Next)"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "ReconnectBrowser"
+  },
+  {
     "parentModuleName": "popUpFunctions",
     "actionName": "popUpHandler"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "checkChromeProfileOwner"
   }
 ]

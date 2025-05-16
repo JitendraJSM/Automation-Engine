@@ -38,8 +38,16 @@
     "actionName": "clickShortsBTN"
   },
   {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
     "parentModuleName": "youTube",
     "actionName": "clickLikeBTN"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
   },
   {
     "parentModuleName": "page",
@@ -76,11 +84,23 @@
     "argumentsString": "::-p-text(Next)"
   },
   {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "ReconnectBrowser"
+  },
+  {
     "parentModuleName": "popUpFunctions",
     "actionName": "popUpHandler"
   },
   {
+    "parentModuleName": "page",
+    "actionName": "waitForPageLoad"
+  },
+  {
     "parentModuleName": "chrome",
-    "actionName": "printAllPagesURLs"
+    "actionName": "checkChromeProfileOwner"
   }
 ]
