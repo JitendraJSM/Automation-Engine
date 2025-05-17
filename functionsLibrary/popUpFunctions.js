@@ -125,3 +125,5 @@ async function monitorPopUp() {
 //     }
 //   });
 // }
+
+// As practically this actually is not working for popup works for pages only.

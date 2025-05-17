@@ -4,6 +4,7 @@ module.exports = {
   fetchAPI,
   update,
   getNewMemberToAdd,
+  addSystemProfileToMember,
 };
 
 // === Implementation ===
@@ -20,9 +21,7 @@ async function fetchAPI(endpoint, params = {}) {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP error! status: ${response.status} on ${API_URL}${endpoint}`
-      );
+      throw new Error(`HTTP error! status: ${response.status} on ${API_URL}${endpoint}`);
     }
 
     const data = await response.json();
@@ -70,9 +69,7 @@ async function update(endpoint, data, params = {}) {
 
 // ------------------- Get Data from API Methods
 async function getNewMemberToAdd() {
-  const response = await fetchAPI(
-    `/members?systemName=-${this.state.currentMachine}`
-  );
+  const response = await fetchAPI(`/members?systemName=-${this.state.currentMachine}`);
 
   if (response.results == 0) {
     console.log(`No new member to add.`);
@@ -85,6 +82,38 @@ async function getNewMemberToAdd() {
   return newMembersToAdd[0];
 }
 getNewMemberToAdd.shouldStoreState = "newMemberToAdd";
+
+async function addSystemProfileToMember(memberGmail, systemName, profileNumber) {
+  console.log(`ok addSystemProfileToMember started`);
+
+  memberGmail ||= this.state.newMemberToAdd.gmail;
+  systemName ||= this.state.currentMachine;
+  profileNumber ||= this.state.nextAvailableChromeProfile;
+  const response = await fetchAPI(`/members?gmail=${memberGmail}`, {
+    method: "GET",
+  });
+
+  const memberId = this.state.newMemberToAdd._id;
+
+  const sytemProfile = { systemName, profileNumber };
+
+  const res = await fetchAPI(`/members/${memberId}/systemProfile/`, {
+    method: "PATCH",
+    body: JSON.stringify(sytemProfile),
+  });
+  const successMSG = `System Profile added successfully to member ${memberGmail} with systemName ${systemName} and profileNumber ${profileNumber}`;
+  const errorMSG = `Some error occured can't add to member ${memberGmail} with systemName ${systemName} and profileNumber ${profileNumber}`;
+  if (res.status !== "success") {
+    console.log(errorMSG);
+    this.logger.logError(errorMSG);
+    return false;
+  } else {
+    console.log(successMSG);
+    this.logger.logMSG(successMSG);
+    return true;
+  }
+}
+
 /* Doesn't seems required and the polling in appExecuter.js is not implemented yet. 
 getNewMemberToAdd.polling = true;
 getNewMemberToAdd.pollingInterval = 1000;

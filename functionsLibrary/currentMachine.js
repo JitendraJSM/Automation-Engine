@@ -16,14 +16,17 @@ getCurrentMachineName.shouldStoreState = "currentMachine";
 function getNextAvailableChromeProfile() {
   // const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
   const profilesPath = `C:/Automation-App-by-JN-Data`;
-  // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array.
-  const profilesCreated = fs
+  // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array. Find first missing number starting from 1
+  const profileNumbers = fs
     .readdirSync(profilesPath)
-    .filter((foldersName) => foldersName.startsWith("Profile"));
+    .filter((name) => name.startsWith("Profile"))
+    .map((name) => parseInt(name.split(" ")[1]))
+    .sort((a, b) => a - b);
 
-  // 2. Find first available profile number
-  // const nextProfileNumber = profilesCreated.length + 2;
-  const nextProfileNumber = profilesCreated.length + 1;
+  // Find first missing number
+  const nextProfileNumber = profileNumbers.reduce((missing, current) => (current === missing ? missing + 1 : missing), 1);
+
+  console.log(`nextProfileNumber: ${nextProfileNumber}`);
   return nextProfileNumber;
 }
 getNextAvailableChromeProfile.shouldStoreState = "nextAvailableChromeProfile";

@@ -24,6 +24,7 @@ function loggerInit() {
   this.logger.logError = logError.bind(this);
   this.logger.logTask = logTask.bind(this);
   this.logger.logAction = logAction.bind(this);
+  this.logger.logState = logState.bind(this);
   this.logger.logTaskResult = logTaskResult.bind(this);
 
   this.state.startTime = Date.now();
@@ -73,6 +74,11 @@ function logTask() {
 function logAction() {
   if (!this.state.logFilePath) return;
   fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.currentAction, null, 2) + "\n\n");
+  this.logger.logLineBreak();
+}
+
+function logState() {
+  fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.state, null, 2) + "\n\n");
   this.logger.logLineBreak();
 }
 

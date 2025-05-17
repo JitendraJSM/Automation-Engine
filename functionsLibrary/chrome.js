@@ -27,6 +27,7 @@ async function initializeBrowser() {
 
     this.page = result.page;
     hookMethodsOnPage.call(this, this.page);
+    this.popUpFunctions.randomPageHandler.call(this);
 
     // Extra code that is not neccessary but useful
     const context = this.browser.defaultBrowserContext();
@@ -83,6 +84,14 @@ async function checkChromeProfileOwner() {
 
   let name = await (await this.page.locator("#account-name").waitHandle()).evaluate((el) => el.innerText);
   let email = await (await this.page.locator("#email").waitHandle()).evaluate((el) => el.innerText);
+
+  if (!name || !email || this.state.newMemberToAdd.gmail !== email) {
+    console.log(`Profile Owner not found`);
+    return;
+  }
+
+  this.state.profileOwner = name;
+  this.state.profileOwnerEmail = email;
   console.log(`Profile Owner: ${name} (${email})`);
 }
 

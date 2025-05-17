@@ -80,6 +80,9 @@ class App {
       this.currentAction = action;
       await executeAction.call(this, action);
     }
+
+    // Logging the state in the end
+    this.logger.logState();
   }
 
   async stop() {

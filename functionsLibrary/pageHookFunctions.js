@@ -34,9 +34,34 @@ async function hookMethodsOnPage(page) {
   page.listAllElementsText = listAllElementsText.bind(this);
   page.listAllElementsTextAndSelector = listAllElementsTextAndSelector.bind(this);
   // ==== 👇🏻 Event Handler 👇🏻 ====
-  page.on("framenavigated", (frame) => {
-    if (frame === page.mainFrame()) {
+  page.on("framenavigated", async (frame) => {
+    if (frame === this.page.mainFrame()) {
       this.logger.logMSG(`Navigated to: ${frame.url()}`);
+      console.log(this);
+
+      const randomPageHandlers = {
+        // url:"selectorStringToClick"
+        "/recaptcha?": '[role="presentation"]',
+      };
+      for (const url of Object.keys(randomPageHandlers)) {
+        try {
+          const randomPage = (await this.browser.pages()).find((p) => p.url() === url || p.url().includes(url));
+
+          if (randomPage) {
+            await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
+            console.log(`Random Page found: ${randomPage.url()}`);
+            const selector = randomPageHandlers[url];
+            console.log(`Selector: ${selector}`);
+
+            await randomPage.bringToFront();
+            await randomPage.locator(selector).click();
+            console.log(`Ramdom page handled by listener: ${url}`);
+            return randomPage;
+          }
+        } catch (error) {
+          console.error(`Error handling popup for  ${url}:`, error);
+        }
+      }
     }
   });
 }
