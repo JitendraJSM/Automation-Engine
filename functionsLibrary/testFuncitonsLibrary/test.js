@@ -1,6 +1,3 @@
-// === InterFace ===
-module.exports = { testFunction1, testFunction2 };
-
 // === Implementations ===
 
 async function testFunction1(arg1, agr2) {
@@ -40,3 +37,24 @@ async function testFunction2(arg1, agr2) {
   // // console.log(this.state);
   console.log(`=======Code Tested=======`);
 }
+const catchAsync = require("../../utils/catchAsync.js");
+async function testFunction3() {
+  console.log(`Running testFunctions3...`);
+
+  // console.log(this.state);
+
+  // console.log(this);
+  // const a = "simpleString";
+  console.log(a.validity);
+
+  console.log(`testFunctions3 Ended.`);
+}
+// testFunction3.continueOnError = false;
+
+async function testFunction4() {
+  console.log(`Running testFunctions4...`);
+  // console.log(this);
+  console.log(`testFunctions4 Ended.`);
+}
+// === InterFace ===
+module.exports = { testFunction1, testFunction2, testFunction3: catchAsync(testFunction3), testFunction4 };

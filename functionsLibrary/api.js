@@ -70,7 +70,6 @@ async function update(endpoint, data, params = {}) {
 // ------------------- Get Data from API Methods
 async function getNewMemberToAdd() {
   const response = await fetchAPI(`/members?systemName=-${this.state.currentMachine}`);
-
   if (response.results == 0) {
     console.log(`No new member to add.`);
     return false;

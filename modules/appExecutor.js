@@ -49,8 +49,9 @@ async function executeAction(actionDetails) {
     argumentsString,
     shouldStoreState,
     continueOnError,
-    doNotParseArgumentString = false,
-    // continueOnError = false,
+    doNotParseArgumentString,
+    // doNotParseArgumentString = false, // Default to false
+    // continueOnError = false, // Default to false
   } = actionDetails;
 
   // Get the parent module instance
@@ -68,7 +69,7 @@ async function executeAction(actionDetails) {
     await this.utils.randomDelay(3, 1);
 
     // Only parse as JSON if it's an object-like string
-    let parsedArguments = doNotParseArgumentString ? [argumentsString] : parseArguments.call(this, argumentsString);
+    let parsedArguments = !!doNotParseArgumentString ? [argumentsString] : parseArguments.call(this, argumentsString);
 
     // console.log(`parsed args: ${parsedArgs}`);
     // console.log(`Array.isArray parsed args: ${Array.isArray(parsedArgs)}`);
@@ -91,6 +92,7 @@ async function executeAction(actionDetails) {
     if (!continueOnError) {
       throw error;
     }
+
     console.error(`Error executing action: ${error.message}`);
     return null;
   }

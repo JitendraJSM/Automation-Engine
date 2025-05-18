@@ -27,7 +27,6 @@ async function initializeBrowser() {
 
     this.page = result.page;
     hookMethodsOnPage.call(this, this.page);
-    this.popUpFunctions.randomPageHandler.call(this);
 
     // Extra code that is not neccessary but useful
     const context = this.browser.defaultBrowserContext();

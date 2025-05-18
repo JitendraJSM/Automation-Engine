@@ -1,7 +1,12 @@
 [
   {
     "parentModuleName": "test",
-    "actionName": "testFunction1",
+    "actionName": "testFunction3",
+    "shouldStoreState": "testFunctionResult"
+  },
+  {
+    "parentModuleName": "test",
+    "actionName": "testFunction4",
     "shouldStoreState": "testFunctionResult"
   }
 ]
