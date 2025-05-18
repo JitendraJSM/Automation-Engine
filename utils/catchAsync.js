@@ -19,6 +19,19 @@ testFunction3.errorHandler = async function (err) {
   - By Default value of continueOnError is true even when fn.continueOnError is not defined,
       BUT if you want that execution should stop if any error occured in function then you must set fn.continueOnError = false
 
+// Step 4: wrap the async function using catchAsync function 
+  - Must call catchAsync with function as arugument itself to pass the properties with it
+  like below:
+  - catchAsync(testFunction3)
+  - OR
+  - catchAsync(testFunction3, {continueOnError: false})
+  - OR
+  - catchAsync(testFunction3, {errorHandler: errorHandlerOftestFunction3})
+  - OR
+  - catchAsync(testFunction3, {continueOnError: false, errorHandler: errorHandlerOftestFunction3})
+  - OR
+  - catchAsync(testFunction3, {continueOnError: true, errorHandler: errorHandlerOftestFunction3})
+
 */
 
 /**
