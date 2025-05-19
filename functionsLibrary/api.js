@@ -1,16 +1,7 @@
-// === Interface ===
-module.exports = {
-  apiTesting,
-  fetchAPI,
-  update,
-  getNewMemberToAdd,
-  addSystemProfileToMember,
-};
-
 // === Implementation ===
 const API_URL = process.env.API_URL || "http://localhost:3000/api/v1";
 // Fetch data from API and store in local cache
-async function fetchAPI(endpoint, params = {}) {
+const fetchAPI = async function (endpoint, params = {}) {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "GET",
@@ -21,7 +12,9 @@ async function fetchAPI(endpoint, params = {}) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status} on ${API_URL}${endpoint}`);
+      throw new Error(
+        `HTTP error! status: ${response.status} on ${API_URL}${endpoint}`
+      );
     }
 
     const data = await response.json();
@@ -30,19 +23,19 @@ async function fetchAPI(endpoint, params = {}) {
     console.error(`Failed to fetch data from ${endpoint}:`, error);
     throw error;
   }
-}
+};
 
-async function apiTesting() {
+const apiTesting = async function () {
   try {
     await fetchAPI();
   } catch (error) {
     console.error("Failed to initialize database interface:", error);
     throw error;
   }
-}
+};
 
 // Update data through API
-async function update(endpoint, data, params = {}) {
+const update = async function (endpoint, data, params = {}) {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "PATCH",
@@ -65,11 +58,13 @@ async function update(endpoint, data, params = {}) {
     console.error(`Failed to update data at ${endpoint}:`, error);
     throw error;
   }
-}
+};
 
 // ------------------- Get Data from API Methods
-async function getNewMemberToAdd() {
-  const response = await fetchAPI(`/members?systemName=-${this.state.currentMachine}`);
+const getNewMemberToAdd = async function () {
+  const response = await fetchAPI(
+    `/members?systemName=-${this.state.currentMachine}`
+  );
   if (response.results == 0) {
     console.log(`No new member to add.`);
     return false;
@@ -79,10 +74,15 @@ async function getNewMemberToAdd() {
   const newMembersToAdd = await response.data.data;
 
   return newMembersToAdd[0];
-}
+};
 getNewMemberToAdd.shouldStoreState = "newMemberToAdd";
+// getNewMemberToAdd.continueOnError = false;
 
-async function addSystemProfileToMember(memberGmail, systemName, profileNumber) {
+async function addSystemProfileToMember(
+  memberGmail,
+  systemName,
+  profileNumber
+) {
   console.log(`ok addSystemProfileToMember started`);
 
   memberGmail ||= this.state.newMemberToAdd.gmail;
@@ -140,3 +140,12 @@ getNewMemberToAdd.pollingRetries = 3;
 //   // console.log(members[0].systemProfiles);
 //   return members[0];
 // }
+// === Interface ===
+const catchAsync = require("../utils/catchAsync.js");
+module.exports = {
+  apiTesting: catchAsync(apiTesting),
+  fetchAPI: catchAsync(fetchAPI),
+  update: catchAsync(update),
+  getNewMemberToAdd: catchAsync(getNewMemberToAdd),
+  addSystemProfileToMember: catchAsync(addSystemProfileToMember),
+};

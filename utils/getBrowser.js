@@ -22,9 +22,8 @@ exports.getBrowser = async (options) => {
   options.profileTarget ||= process.env.CHORME_TARGET_PROFILE;
   options.initialURL ||= process.env.INITIAL_URL;
   // Create some logic in future as the size & position depends on the current Machine.
-  /* How to get current window Size and Position "window.outerWidth", "window.outerHeight", "window.screenX" & "window.screenY". */
-  options.windowSize ||= [809, 831]; // minimum size as size changes selector's also
-  options.windowPosition ||= [734, 0]; // for home-laptop
+  options.windowSize ||= [814, 859];
+  options.windowPosition ||= [793, 0];
   options.environment ||= process.env.ENVIRONMENT;
 
   const wsUrl = await getDebuggerUrl(
@@ -85,15 +84,13 @@ async function openChromeInstance(profileTarget, windowSize, windowPosition) {
     `In openChromeInstance function, Profile to be opened has target: ${profileTarget}`
   );
 
-  // const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
-
-  const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
+  const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
+  // const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
 
   // for older chrome v135 and below
   // const openCommand = `"${chromePath}"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
   // for newer chrome v136 and above
   const openCommand = `"${chromePath}" --user-data-dir="C:/Automation-App-by-JN-Data"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
-
   const chromeProcess = spawn(openCommand, [], {
     shell: true,
     detached: true,
@@ -158,7 +155,7 @@ async function pptrConnect(wsUrl, initialURL) {
 }
 
 // only for testing purppose
-// exports.pptrConnect = pptrConnect;
+exports.pptrConnect = pptrConnect;
 
 const writeWSinFile = async (ws) => {
   fs.writeFileSync("currentWS.txt", ws);

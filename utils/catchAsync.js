@@ -42,7 +42,8 @@ testFunction3.errorHandler = async function (err) {
 const { askUser } = require("./utils");
 
 const catchAsync = (fn) => {
-  return async function (...args) {
+  // Create the function with the same name using Object.defineProperty
+  const wrappedFn = async function (...args) {
     try {
       const result = await fn.apply(this, args);
       return result;
@@ -53,15 +54,22 @@ const catchAsync = (fn) => {
       } else {
         const modErrorMSG = `Error in ${fn.name}: ${
           error.message
-        }. \n${error.stack.split("\n")[1].trim()}`;
+        }. \n${error?.stack?.split("\n")[1]?.trim()}`;
 
         console.error(`\x1b[31m${modErrorMSG}\x1b[0m`);
         this.logger.logError(modErrorMSG);
-        // take a screen shot of browser page also note url of page with error in log file if exists and if not exists then log app or reconnect browser
         await askUser("Press Enter to continue...");
       }
     }
   };
+  // Set the function name
+  Object.defineProperty(wrappedFn, "name", {
+    value: fn.name,
+    configurable: true,
+  });
+  // Copy all other properties
+  Object.assign(wrappedFn, fn);
+  return wrappedFn;
 };
 
 module.exports = catchAsync;

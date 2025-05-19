@@ -45,11 +45,11 @@ async function testFunction3() {
 
   // console.log(this);
   // const a = "simpleString";
-  console.log(a.validity);
+  // console.log(a.validity);
 
   console.log(`testFunctions3 Ended.`);
 }
-// testFunction3.continueOnError = false;
+testFunction3.continueOnError = "klkl";
 
 async function testFunction4() {
   console.log(`Running testFunctions4...`);
@@ -57,4 +57,10 @@ async function testFunction4() {
   console.log(`testFunctions4 Ended.`);
 }
 // === InterFace ===
-module.exports = { testFunction1, testFunction2, testFunction3: catchAsync(testFunction3), testFunction4 };
+module.exports = {
+  testFunction1,
+  testFunction2,
+  testFunction3: catchAsync(testFunction3),
+  // testFunction3,
+  testFunction4: catchAsync(testFunction4),
+};

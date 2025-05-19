@@ -1,16 +1,10 @@
 const hookMethodsOnPage = require("../functionsLibrary/pageHookFunctions.js");
 // -- All The Functions related to Chrome Browser --
-// === Interface ===
-module.exports = {
-  initializeBrowser,
-  printAllPagesURLs,
-  ReconnectBrowser,
-  checkChromeProfileOwner,
-};
+
 // === Implementation ===
 
 // 1. Start / Open this.state.nextProfileNumber / Connect to browser
-async function initializeBrowser() {
+const initializeBrowser = async function () {
   let { getBrowser } = require("../utils/getBrowser.js");
 
   try {
@@ -37,9 +31,9 @@ async function initializeBrowser() {
     console.error("Failed to initialize browser:", error);
     throw error;
   }
-}
+};
 // 2. Delete this.browser and Reconnect to browser
-async function ReconnectBrowser() {
+const ReconnectBrowser = async function () {
   let { getBrowser } = require("../utils/getBrowser.js");
 
   try {
@@ -68,10 +62,10 @@ async function ReconnectBrowser() {
     console.error("Failed to initialize browser:", error);
     throw error;
   }
-}
+};
 
 // 3. Check currently opend chrome profileOwner
-async function checkChromeProfileOwner() {
+const checkChromeProfileOwner = async function () {
   if (!this.browser) {
     console.log(`Browser not initialized to check profileOwner`);
     return;
@@ -81,8 +75,12 @@ async function checkChromeProfileOwner() {
   await this.page.waitForPageLoad();
   await this.page.clickNotClickable("#avatar-btn");
 
-  let name = await (await this.page.locator("#account-name").waitHandle()).evaluate((el) => el.innerText);
-  let email = await (await this.page.locator("#email").waitHandle()).evaluate((el) => el.innerText);
+  let name = await (
+    await this.page.locator("#account-name").waitHandle()
+  ).evaluate((el) => el.innerText);
+  let email = await (
+    await this.page.locator("#email").waitHandle()
+  ).evaluate((el) => el.innerText);
 
   if (!name || !email || this.state.newMemberToAdd.gmail !== email) {
     console.log(`Profile Owner not found`);
@@ -92,12 +90,21 @@ async function checkChromeProfileOwner() {
   this.state.profileOwner = name;
   this.state.profileOwnerEmail = email;
   console.log(`Profile Owner: ${name} (${email})`);
-}
+};
 
-async function printAllPagesURLs() {
+const printAllPagesURLs = async function () {
   let pages = await this.browser.pages();
 
   // Replace each page object with its URL
   pages = await Promise.all(pages.map(async (page) => await page.url()));
   console.log(`pages : ${pages}`);
-}
+};
+
+// === Interface ===
+const catchAsync = require("../utils/catchAsync.js");
+module.exports = {
+  initializeBrowser: catchAsync(initializeBrowser),
+  printAllPagesURLs: catchAsync(printAllPagesURLs),
+  ReconnectBrowser: catchAsync(ReconnectBrowser),
+  checkChromeProfileOwner: catchAsync(checkChromeProfileOwner),
+};

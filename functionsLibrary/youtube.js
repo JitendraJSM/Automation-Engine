@@ -1,13 +1,11 @@
 // Some Basic Functions need to be implemented here
 // 1. Go to Youtube
-// === Interface ===
-module.exports = { clickShortsBTN, clickLikeBTN };
 
 // === Definitions ===
-async function clickShortsBTN() {
+const clickShortsBTN = async function () {
   return this.page.clickNotClickable("span.title ::-p-text(Shorts)");
-}
-async function clickLikeBTN() {
+};
+const clickLikeBTN = async function () {
   // This like works for both shorts or video URL
   try {
     let likeBTN = await this.page.waitForElementRobust(
@@ -31,4 +29,10 @@ async function clickLikeBTN() {
     console.log(`Error message in clickLikeBTN(): ${error.message}`);
     return false;
   }
-}
+};
+// === Interface ===
+const catchAsync = require("../utils/catchAsync.js");
+module.exports = {
+  clickShortsBTN: catchAsync(clickShortsBTN),
+  clickLikeBTN: catchAsync(clickLikeBTN),
+};

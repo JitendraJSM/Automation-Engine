@@ -13,73 +13,22 @@
 */
 // If Proxy create random errors, then use different approach.
 
-// === Interface ===
-module.exports = hookMethodsOnPage;
-
-// === Implementation ===
-async function hookMethodsOnPage(page) {
-  page.waitForPageLoad = waitForPageLoad.bind(this);
-  page.navigateTo = navigateTo.bind(this);
-  page.waitForElementRobust = waitForElementRobust.bind(this);
-  page.clickNotClickable = clickNotClickable.bind(this);
-  page.getText = getText.bind(this);
-  page.typeHuman = typeHuman.bind(this);
-  page.checkVisibilityBeforeClick = checkVisibilityBeforeClick.bind(this);
-  page.waitForURLChange = waitForURLChange.bind(this);
-
-  // ==== 👇🏻 for Testing & Debugging 👇🏻 ====
-  page.listAllPages = listAllPages.bind(this);
-  page.listAllFrames = listAllFrames.bind(this);
-  page.listAllElements = listAllElements.bind(this);
-  page.listAllElementsText = listAllElementsText.bind(this);
-  page.listAllElementsTextAndSelector = listAllElementsTextAndSelector.bind(this);
-  // ==== 👇🏻 Event Handler 👇🏻 ====
-  page.on("framenavigated", async (frame) => {
-    if (frame === this.page.mainFrame()) {
-      this.logger.logMSG(`Navigated to: ${frame.url()}`);
-
-      const randomPageHandlers = {
-        // url:"selectorStringToClick"
-        "/recaptcha?": '[role="presentation"]',
-      };
-      for (const url of Object.keys(randomPageHandlers)) {
-        try {
-          const randomPage = (await this.browser.pages()).find((p) => p.url() === url || p.url().includes(url));
-
-          if (randomPage) {
-            await this.logger.logMSG(`== Random Page : ${randomPage.url()}`);
-            await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
-            console.log(`Random Page found: ${randomPage.url()}`);
-            const selector = randomPageHandlers[url];
-            console.log(`Selector: ${selector}`);
-
-            await randomPage.bringToFront();
-            await randomPage.locator(selector).click();
-            console.log(`Ramdom page handled by listener: ${url}`);
-            return randomPage;
-          }
-        } catch (error) {
-          console.error(`Error handling popup for  ${url}:`, error);
-        }
-      }
-    }
-  });
-}
-
 /*  1. waitForPageLoad(options)
               - if already loaded, returns true immediately
               - waits for page to be loaded "options.timeOut"
               - returns true if page is loaded,
               - returns false if page is not loaded in "options.timeOut" 
               - throws an error if "options.continueOnError" is set to "true" */
-async function waitForPageLoad(timeout = 120000) {
+const catchAsync = require("../utils/catchAsync.js");
+
+const waitForPageLoad = async function (timeout = 120000) {
   return await this.page.waitForFunction(
     () => document.readyState === "complete",
     { timeout } // Set timeout to 10 minutes in rare coditions.
   );
-}
+};
 
-async function navigateTo(url) {
+const navigateTo = async function (url) {
   try {
     console.log(`app.page.navigateTo(${url}) called.`);
     if (this.page.url().includes(url)) {
@@ -99,18 +48,19 @@ async function navigateTo(url) {
   } catch (error) {
     console.log(`Error in app.page.navigateTo(${url}) is as: ${error.message}`);
   }
-}
+};
 // ==== 👇🏻 for Testing & Debugging 👇🏻 ====
-async function waitForElementRobust(textOrSelector, text) {
+const waitForElementRobust = async function (textOrSelector, text) {
   text = false;
-  let selectorString = text === true ? `::-p-text(${textOrSelector})` : textOrSelector;
+  let selectorString =
+    text === true ? `::-p-text(${textOrSelector})` : textOrSelector;
 
   const element = await this.page.locator(selectorString).waitHandle();
   if (!element) {
     console.log(`Element not found for: ${selectorString}.`);
     return false;
   } else return element;
-}
+};
 
 /**
  * Attempts to click on an element that is not immediately clickable on a page.
@@ -124,12 +74,15 @@ async function waitForElementRobust(textOrSelector, text) {
  * @param {string|object} textOrSelectorOrElement - The selector string or element handle to click.
  * @throws Will throw an error if the element cannot be found or its bounding box is not available.
  */
-async function clickNotClickable(textOrSelectorOrElement, text) {
+const clickNotClickable = async function (textOrSelectorOrElement, text) {
   await this.page.waitForPageLoad();
   await this.utils.randomDelay(0.75);
 
   const waitSearchnClick = async (page, textOrSelectorOrElement, text) => {
-    let element = typeof textOrSelectorOrElement === "string" ? await page.waitForElementRobust(textOrSelectorOrElement, text) : textOrSelectorOrElement;
+    let element =
+      typeof textOrSelectorOrElement === "string"
+        ? await page.waitForElementRobust(textOrSelectorOrElement, text)
+        : textOrSelectorOrElement;
 
     const boundingBox = await element.boundingBox();
     if (boundingBox) {
@@ -137,7 +90,8 @@ async function clickNotClickable(textOrSelectorOrElement, text) {
       await page.mouse.click(x + width / 2, y + height / 2);
       // await page.log("act", `Clicked on ${textOrSelectorOrElement} done.`);
       return true; // Exit on success
-    } else throw Error(`Bounding Box not found for: ${textOrSelectorOrElement}.`);
+    } else
+      throw Error(`Bounding Box not found for: ${textOrSelectorOrElement}.`);
   };
 
   await this.utils.robustPolling(
@@ -153,16 +107,16 @@ async function clickNotClickable(textOrSelectorOrElement, text) {
     text
   );
   await this.page.waitForPageLoad();
-}
+};
 // ==========================================================================
-async function getText(selector) {
+const getText = async function (selector) {
   console.log(`Get Text Function Called`);
   const el = await this.page.locator(selector).waitHandle();
   const text = await this.page.evaluate((element) => element.textContent, el);
   console.log(text);
-}
+};
 
-async function typeHuman(selector, stringToType) {
+const typeHuman = async function (selector, stringToType) {
   const options = {
     backspaceMaximumDelayInMs: 750 * 2,
     backspaceMinimumDelayInMs: 750,
@@ -182,7 +136,11 @@ async function typeHuman(selector, stringToType) {
 
   for (let char of stringToType) {
     // Simulate typing delay
-    const delay = Math.floor(Math.random() * (options.maximumDelayInMs - options.minimumDelayInMs + 1)) + options.minimumDelayInMs;
+    const delay =
+      Math.floor(
+        Math.random() *
+          (options.maximumDelayInMs - options.minimumDelayInMs + 1)
+      ) + options.minimumDelayInMs;
 
     // Introduce a typo based on the typo chance
     let typedChar = char;
@@ -200,7 +158,13 @@ async function typeHuman(selector, stringToType) {
         await inputField.type(typedChar, { delay });
 
         // Simulate backspacing to remove the typo
-        const backspaceDelay = Math.floor(Math.random() * (options.backspaceMaximumDelayInMs - options.backspaceMinimumDelayInMs + 1)) + options.backspaceMinimumDelayInMs;
+        const backspaceDelay =
+          Math.floor(
+            Math.random() *
+              (options.backspaceMaximumDelayInMs -
+                options.backspaceMinimumDelayInMs +
+                1)
+          ) + options.backspaceMinimumDelayInMs;
         await this.utils.delay(backspaceDelay);
 
         // Type backspace to remove the last character (the typo)
@@ -215,16 +179,18 @@ async function typeHuman(selector, stringToType) {
     // Type the character normally
     await inputField.type(typedChar, { delay });
   }
-}
+};
 
-async function checkVisibilityBeforeClick(selector) {
+const checkVisibilityBeforeClick = async function (selector) {
   return await this.page.evaluate((selector) => {
-    const subBTN = Array.from(document.querySelectorAll(selector)).find((el) => el.checkVisibility());
+    const subBTN = Array.from(document.querySelectorAll(selector)).find((el) =>
+      el.checkVisibility()
+    );
     // subBTN.click();
     // return subBTN.textContent;
     return subBTN;
   }, selector);
-}
+};
 
 /**
  * Waits for the page URL to change from the given beforePageURL.
@@ -239,7 +205,12 @@ async function checkVisibilityBeforeClick(selector) {
  * @param {number} timeoutMs - The timeout in milliseconds after which the method will return false. Default is 30000.
  * @returns {(string | false)} The new URL if the URL changed, false otherwise.
  */
-async function waitForURLChange(beforePageURL, maxAttempts = 5, delayMs = 3000, timeoutMs = 30000) {
+const waitForURLChange = async function (
+  beforePageURL,
+  maxAttempts = 5,
+  delayMs = 3000,
+  timeoutMs = 30000
+) {
   let flag;
   try {
     flag = await utils.robustPolling(
@@ -266,7 +237,7 @@ async function waitForURLChange(beforePageURL, maxAttempts = 5, delayMs = 3000, 
   } finally {
     return flag;
   }
-}
+};
 
 /*
 // ==== 👇🏻 Event Handler 👇🏻 ====
@@ -313,41 +284,101 @@ async function log(type = "act", message) {
 */
 
 // ==== 👇🏻 for Testing & Debugging 👇🏻 ====
-async function listAllPages() {
+const listAllPages = async function () {
   const pages = await this.browser.pages();
   for (const page of pages) {
     console.log(`Page URL: ${page.url()}`);
   }
-}
+};
 
-async function listAllFrames() {
+const listAllFrames = async function () {
   const frames = this.page.frames();
   for (const frame of frames) {
     console.log(`Frame URL: ${frame.url()}`);
   }
-}
-async function listAllElements() {
+};
+const listAllElements = async function () {
   const elements = await this.page.$$("*");
   for (const element of elements) {
     const tagName = await element.evaluate((el) => el.tagName);
     console.log(`Element: ${tagName}`);
   }
-}
+};
 
-async function listAllElementsText() {
+const listAllElementsText = async function () {
   const elements = await this.page.$$("*");
   for (const element of elements) {
     const tagName = await element.evaluate((el) => el.tagName);
     const textContent = await element.evaluate((el) => el.textContent);
     console.log(`Element: ${tagName}, Text: ${textContent}`);
   }
-}
-async function listAllElementsTextAndSelector() {
+};
+const listAllElementsTextAndSelector = async function () {
   const elements = await this.page.$$("*");
   for (const element of elements) {
     const tagName = await element.evaluate((el) => el.tagName);
     const textContent = await element.evaluate((el) => el.textContent);
     const selector = await element.evaluate((el) => el.outerHTML);
-    console.log(`Element: ${tagName}, Text: ${textContent}, Selector: ${selector}`);
+    console.log(
+      `Element: ${tagName}, Text: ${textContent}, Selector: ${selector}`
+    );
   }
-}
+};
+
+// === Implementation ===
+const hookMethodsOnPage = async function (page) {
+  page.waitForPageLoad = catchAsync(waitForPageLoad.bind(this));
+  page.navigateTo = catchAsync(navigateTo.bind(this));
+  page.waitForElementRobust = catchAsync(waitForElementRobust.bind(this));
+  page.clickNotClickable = catchAsync(clickNotClickable.bind(this));
+  page.getText = catchAsync(getText.bind(this));
+  page.typeHuman = catchAsync(typeHuman.bind(this));
+  page.checkVisibilityBeforeClick = catchAsync(
+    checkVisibilityBeforeClick.bind(this)
+  );
+  page.waitForURLChange = catchAsync(waitForURLChange.bind(this));
+
+  // ==== 👇🏻 for Testing & Debugging 👇🏻 ====
+  page.listAllPages = catchAsync(listAllPages.bind(this));
+  page.listAllFrames = catchAsync(listAllFrames.bind(this));
+  page.listAllElements = catchAsync(listAllElements.bind(this));
+  page.listAllElementsText = catchAsync(listAllElementsText.bind(this));
+  page.listAllElementsTextAndSelector = catchAsync(
+    listAllElementsTextAndSelector.bind(this)
+  );
+  // ==== 👇🏻 Event Handler 👇🏻 ====
+  page.on("framenavigated", async (frame) => {
+    if (frame === this.page.mainFrame()) {
+      this.logger.logMSG(`Navigated to: ${frame.url()}`);
+
+      const randomPageHandlers = {
+        // url:"selectorStringToClick"
+        "/recaptcha?": '[role="presentation"]',
+      };
+      for (const url of Object.keys(randomPageHandlers)) {
+        try {
+          const randomPage = (await this.browser.pages()).find(
+            (p) => p.url() === url || p.url().includes(url)
+          );
+
+          if (randomPage) {
+            await this.logger.logMSG(`== Random Page : ${randomPage.url()}`);
+            await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
+            console.log(`Random Page found: ${randomPage.url()}`);
+            const selector = randomPageHandlers[url];
+            console.log(`Selector: ${selector}`);
+
+            await randomPage.bringToFront();
+            await randomPage.locator(selector).click();
+            console.log(`Ramdom page handled by listener: ${url}`);
+            return randomPage;
+          }
+        } catch (error) {
+          console.error(`Error handling popup for  ${url}:`, error);
+        }
+      }
+    }
+  });
+};
+// === Interface ===
+module.exports = catchAsync(hookMethodsOnPage);

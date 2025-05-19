@@ -23,7 +23,13 @@ function parseArgumentValue(value) {
       if (element in result) {
         result = result[element];
       } else {
-        console.log(`${element} not exists on this.${valueArr.slice(0, i).join(".")}, \n so please check argumentsString in the task.json file.`);
+        console.log(
+          `${element} not exists on this.${valueArr
+            .slice(0, i)
+            .join(
+              "."
+            )}, \n so please check argumentsString in the task.json file.`
+        );
         return undefined;
       }
     }
@@ -38,7 +44,9 @@ function parseArguments(argumentsString) {
   let argumentsArray = argumentsString.split(",");
   console.log(`argumentsArray: ${argumentsArray}`);
 
-  let parsedArguments = argumentsArray.map((arg) => parseArgumentValue.call(this, arg));
+  let parsedArguments = argumentsArray.map((arg) =>
+    parseArgumentValue.call(this, arg)
+  );
   return parsedArguments;
 }
 
@@ -48,34 +56,44 @@ async function executeAction(actionDetails) {
     actionName,
     argumentsString,
     shouldStoreState,
-    continueOnError,
     doNotParseArgumentString,
     // doNotParseArgumentString = false, // Default to false
-    // continueOnError = false, // Default to false
   } = actionDetails;
 
   // Get the parent module instance
   const parentModule = this[parentModuleName];
   if (!parentModule) {
-    throw new Error(`Module ${parentModuleName} not found while executing action: ${actionName}`);
+    throw new Error(
+      `Module ${parentModuleName} not found while executing action: ${actionName}`
+    );
   }
 
   // Get the action function
   const action = parentModule[actionName];
   if (typeof action !== "function") {
-    throw new Error(`Action ${actionName} not found in module ${parentModuleName}`);
+    throw new Error(
+      `Action ${actionName} not found in module ${parentModuleName}`
+    );
   }
   try {
     await this.utils.randomDelay(3, 1);
 
     // Only parse as JSON if it's an object-like string
-    let parsedArguments = !!doNotParseArgumentString ? [argumentsString] : parseArguments.call(this, argumentsString);
+    let parsedArguments = !!doNotParseArgumentString
+      ? [argumentsString]
+      : parseArguments.call(this, argumentsString);
 
     // console.log(`parsed args: ${parsedArgs}`);
     // console.log(`Array.isArray parsed args: ${Array.isArray(parsedArgs)}`);
 
+    // Check the preConditions if they exist
+
     // Execute the action based on whether it's async or not
-    const result = action.constructor.name === "AsyncFunction" ? await action.call(this, ...parsedArguments) : action.call(this, ...parsedArguments);
+    // const result = action.constructor.name === "AsyncFunction" ? await action.call(this, ...parsedArguments) : action.call(this, ...parsedArguments);
+    const result =
+      action.constructor.name === "AsyncFunction"
+        ? await action.call(this, ...parsedArguments)
+        : action.call(this, ...parsedArguments);
 
     // Store result in state if specified
     shouldStoreState ||= action.shouldStoreState;
@@ -88,12 +106,10 @@ async function executeAction(actionDetails) {
 
     return result;
   } catch (error) {
-    continueOnError ||= action.continueOnError;
-    if (!continueOnError) {
-      throw error;
-    }
-
-    console.error(`Error executing action: ${error.message}`);
+    console.error(
+      `Error executing action: ${error.message}\n and the error is as below: \n`
+    );
+    console.error(error);
     return null;
   }
 }

@@ -16,7 +16,10 @@ function loggerInit() {
   }
   function _writeInitialContent() {
     const timestamp = _getFormattedTimestamp();
-    fs.writeFileSync(this.state.logFilePath, `${timestamp}\n    Task-1: ${this.task.taskName}\n`);
+    fs.writeFileSync(
+      this.state.logFilePath,
+      `${timestamp}\n    Task-1: ${this.task.taskName}\n`
+    );
     this.logger.logTask();
   }
   this.logger.logMSG = logMSG.bind(this);
@@ -48,7 +51,9 @@ function _getExecutionTime() {
   const totalSeconds = Math.floor((Date.now() - this.state.startTime) / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, "0")} minutes & ${String(seconds).padStart(2, "0")} seconds`;
+  return `${String(minutes).padStart(2, "0")} minutes & ${String(
+    seconds
+  ).padStart(2, "0")} seconds`;
 }
 
 function logMSG(message) {
@@ -61,24 +66,33 @@ function logLineBreak() {
 }
 function logError(message, error) {
   if (!this.state.logFilePath) return;
-  const errorMessage = `${message}\nError: ${error.message}\n`;
+  const errorMessage = `${message}\nError: ${error?.message}\n`;
   fs.appendFileSync(this.state.logFilePath, errorMessage);
 }
 
 function logTask() {
   if (!this.state.logFilePath) return;
-  fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.task, null, 2) + "\n\n");
+  fs.appendFileSync(
+    this.state.logFilePath,
+    JSON.stringify(this.task, null, 2) + "\n\n"
+  );
   this.logger.logLineBreak();
 }
 
 function logAction() {
   if (!this.state.logFilePath) return;
-  fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.currentAction, null, 2) + "\n\n");
+  fs.appendFileSync(
+    this.state.logFilePath,
+    JSON.stringify(this.currentAction, null, 2) + "\n\n"
+  );
   this.logger.logLineBreak();
 }
 
 function logState() {
-  fs.appendFileSync(this.state.logFilePath, JSON.stringify(this.state, null, 2) + "\n\n");
+  fs.appendFileSync(
+    this.state.logFilePath,
+    JSON.stringify(this.state, null, 2) + "\n\n"
+  );
   this.logger.logLineBreak();
 }
 
@@ -98,5 +112,8 @@ function logTaskResult(status = "success") {
       resultMessage = "--------- Successful Execution ---------";
   }
 
-  fs.appendFileSync(this.state.logFilePath, `\n${executionTime}\n${resultMessage}\n`);
+  fs.appendFileSync(
+    this.state.logFilePath,
+    `\n${executionTime}\n${resultMessage}\n`
+  );
 }

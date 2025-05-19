@@ -1,19 +1,13 @@
-// === Interfaces ===
-module.exports = {
-  getCurrentMachineName,
-  isChromeAlreadyOpened,
-  getNextAvailableChromeProfile,
-};
 // === Implementation ===
 const os = require("os");
 const fs = require("fs");
 
-function getCurrentMachineName() {
+const getCurrentMachineName = async function () {
   return os.userInfo().username;
-}
+};
 getCurrentMachineName.shouldStoreState = "currentMachine";
 
-function getNextAvailableChromeProfile() {
+const getNextAvailableChromeProfile = async function () {
   // const profilesPath = `${os.homedir()}/AppData/Local/Google/Chrome/User Data`;
   const profilesPath = `C:/Automation-App-by-JN-Data`;
   // 1. Check how many folders are there in profilesPath starting with 'Profile' and add their name to profiles array. Find first missing number starting from 1
@@ -24,16 +18,19 @@ function getNextAvailableChromeProfile() {
     .sort((a, b) => a - b);
 
   // Find first missing number
-  const nextProfileNumber = profileNumbers.reduce((missing, current) => (current === missing ? missing + 1 : missing), 1);
+  const nextProfileNumber = profileNumbers.reduce(
+    (missing, current) => (current === missing ? missing + 1 : missing),
+    1
+  );
 
   console.log(`nextProfileNumber: ${nextProfileNumber}`);
   return nextProfileNumber;
-}
+};
 getNextAvailableChromeProfile.shouldStoreState = "nextAvailableChromeProfile";
 
 /* Note:- This function must be called before chrome.initializeBrowser() */
 // -- As it is so much dependent on chrome.initializeBrowser() why merge this in that function, what if it needed separately let's think about this in future.
-async function isChromeAlreadyOpened() {
+const isChromeAlreadyOpened = async function () {
   const { promisify } = require("util");
   const { exec } = require("child_process");
   const promisifiedExec = promisify(exec);
@@ -54,8 +51,16 @@ async function isChromeAlreadyOpened() {
   }
   if (wsURL?.startsWith("ws://")) return wsURL;
   else return false;
-}
+};
 isChromeAlreadyOpened.shouldStoreState = "isChromeAlreadyOpened";
+
+// === Interfaces ===
+const catchAsync = require("../utils/catchAsync.js");
+module.exports = {
+  getCurrentMachineName: catchAsync(getCurrentMachineName),
+  isChromeAlreadyOpened: catchAsync(isChromeAlreadyOpened),
+  getNextAvailableChromeProfile: catchAsync(getNextAvailableChromeProfile),
+};
 
 // -------------- Deprecated code.
 // async function currentMachineName() {

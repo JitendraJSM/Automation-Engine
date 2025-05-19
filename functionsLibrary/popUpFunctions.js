@@ -1,13 +1,9 @@
 const handlers = {
   // url:"selectorStringToClick"
-  "chrome://privacy-sandbox-dialog/notice": "privacy-sandbox-notice-dialog-app >>> #ackButton",
-  "chrome://signin-dice-web-intercept.top-chrome/chrome-signin": "chrome-signin-app >>> #accept-button",
-};
-// === Interface ===
-module.exports = {
-  // privacySandboxHandler,
-  monitorPopUp,
-  popUpHandler,
+  "chrome://privacy-sandbox-dialog/notice":
+    "privacy-sandbox-notice-dialog-app >>> #ackButton",
+  "chrome://signin-dice-web-intercept.top-chrome/chrome-signin":
+    "chrome-signin-app >>> #accept-button",
 };
 
 // === Implementation ===
@@ -56,11 +52,14 @@ module.exports = {
 //   // ============================================================
 // }
 // So, I have added a new function with the name as popUpHandler but having monitor called monitorPopU
-async function popUpHandler() {
-  const monitorPopUpPromise = this.monitor.robustPolling(this.popUpFunctions.monitorPopUp.bind(this), {
-    infintiePolling: true,
-    intervalMs: 3000, // Check every 5 seconds
-  });
+const popUpHandler = async function () {
+  const monitorPopUpPromise = this.monitor.robustPolling(
+    this.popUpFunctions.monitorPopUp.bind(this),
+    {
+      infintiePolling: true,
+      intervalMs: 3000, // Check every 5 seconds
+    }
+  );
   setTimeout(() => {
     monitorPopUpPromise.stop();
   }, 25000);
@@ -72,22 +71,24 @@ async function popUpHandler() {
     .catch((err) => {
       console.log("Polling failed:", err);
     });
-}
+};
 
-async function monitorPopUp() {
-  console.log(`==== List of pages when Monitor PopUp called====`);
-  await this.chrome.printAllPagesURLs.call(this);
-  console.log(`================================================`);
+const monitorPopUp = async function () {
+  // console.log(`==== List of pages when Monitor PopUp called====`);
+  // await this.chrome.printAllPagesURLs.call(this);
+  // console.log(`================================================`);
 
   for (const url of Object.keys(handlers)) {
     try {
-      const popUpPage = (await this.browser.pages()).find((p) => p.url() === url);
+      const popUpPage = (await this.browser.pages()).find(
+        (p) => p.url() === url
+      );
 
       if (popUpPage) {
         await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
-        console.log(`Popup Page found: ${popUpPage.url()}`);
+        // console.log(`Popup Page found: ${popUpPage.url()}`);
         const selector = handlers[url];
-        console.log(`Selector: ${selector}`);
+        // console.log(`Selector: ${selector}`);
 
         await popUpPage.bringToFront();
         await popUpPage.locator(selector).click();
@@ -98,7 +99,7 @@ async function monitorPopUp() {
       console.error(`Error handling popup for  ${url}:`, error);
     }
   }
-}
+};
 
 // As practically this actually is not working for popup works for pages only.
 // async function popUpHandler() {
@@ -127,3 +128,10 @@ async function monitorPopUp() {
 // }
 
 // As practically this actually is not working for popup works for pages only.
+// === Interface ===
+const catchAsync = require("../utils/catchAsync.js");
+module.exports = {
+  // privacySandboxHandler,
+  monitorPopUp: catchAsync(monitorPopUp),
+  popUpHandler: catchAsync(popUpHandler),
+};
