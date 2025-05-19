@@ -86,7 +86,23 @@ async function executeAction(actionDetails) {
     // console.log(`parsed args: ${parsedArgs}`);
     // console.log(`Array.isArray parsed args: ${Array.isArray(parsedArgs)}`);
 
-    // Check the preConditions if they exist
+    // Check the preCondition if they exist
+    if (action.preCondition) {
+      let preConditionResult = false;
+      if (typeof action.preCondition === "string" && this.page) {
+        preConditionResult =
+          this.page.url() === action.preCondition ||
+          this.page.url().includes(action.preCondition);
+      } else {
+        preConditionResult = await action.preCondition.call(this);
+      }
+      if (!preConditionResult) {
+        console.log(
+          `Precondition failed for action: ${actionName}. Skipping...`
+        );
+        await askUser("Press Enter to continue...");
+      }
+    }
 
     // Execute the action based on whether it's async or not
     // const result = action.constructor.name === "AsyncFunction" ? await action.call(this, ...parsedArguments) : action.call(this, ...parsedArguments);
