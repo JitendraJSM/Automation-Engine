@@ -27,7 +27,11 @@ exports.getBrowser = async (options) => {
   options.windowPosition ||= [734, 0]; // for home-laptop
   options.environment ||= process.env.ENVIRONMENT;
 
-  const wsUrl = await getDebuggerUrl(options.profileTarget, options.windowSize, options.windowPosition);
+  const wsUrl = await getDebuggerUrl(
+    options.profileTarget,
+    options.windowSize,
+    options.windowPosition
+  );
 
   await writeWSinFile(wsUrl); // Only for testing purpose
 
@@ -56,7 +60,9 @@ async function getDebuggerUrl(profileTarget, windowSize, windowPosition) {
     await openChromeInstance(profileTarget, windowSize, windowPosition);
 
     // Polling the function: Get webSocketDebuggerUrl
-    data = JSON.parse(await utils.robustPolling(getUrl, {}, port)).webSocketDebuggerUrl;
+    data = JSON.parse(
+      await utils.robustPolling(getUrl, {}, port)
+    ).webSocketDebuggerUrl;
     return data;
   } catch (error) {
     console.log(`Error in getDebuggerUrl function : `, error.message);
@@ -75,11 +81,13 @@ async function getUrl() {
 async function openChromeInstance(profileTarget, windowSize, windowPosition) {
   let [w, h] = windowSize;
   let [x, y] = windowPosition;
-  console.log(`In openChromeInstance function, Profile to be opened has target: ${profileTarget}`);
+  console.log(
+    `In openChromeInstance function, Profile to be opened has target: ${profileTarget}`
+  );
 
-  const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
+  // const chromePath = `C:/Program Files/Google/Chrome/Application/chrome.exe`;
 
-  // const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
+  const chromePath = `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe`;
 
   // for older chrome v135 and below
   // const openCommand = `"${chromePath}"  --profile-directory="Profile ${profileTarget}" --remote-debugging-port=${port} --window-size=${w},${h} --window-position=${x},${y}`;
@@ -118,7 +126,11 @@ async function pptrConnect(wsUrl, initialURL) {
 
   let page;
 
-  page = pages.find((p) => p.url().includes(initialURL)) || pages.find((p) => p.url() === "about:blank" || p.url() === "chrome://new-tab-page/");
+  page =
+    pages.find((p) => p.url().includes(initialURL)) ||
+    pages.find(
+      (p) => p.url() === "about:blank" || p.url() === "chrome://new-tab-page/"
+    );
 
   if (!page) {
     console.log("No blank page or Chat Page found, Opening a new Page.");

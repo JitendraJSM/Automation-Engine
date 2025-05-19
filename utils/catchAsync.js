@@ -51,7 +51,12 @@ const catchAsync = (fn) => {
       if (!fn.continueOnError) {
         throw error;
       } else {
-        console.error(`Error in ${fn.name} (${error.stack.split("\n")[1].trim()}): ${error.message}`);
+        const modErrorMSG = `Error in ${fn.name}: ${
+          error.message
+        }. \n${error.stack.split("\n")[1].trim()}`;
+
+        console.error(`\x1b[31m${modErrorMSG}\x1b[0m`);
+        this.logger.logError(modErrorMSG);
         // take a screen shot of browser page also note url of page with error in log file if exists and if not exists then log app or reconnect browser
         await askUser("Press Enter to continue...");
       }
