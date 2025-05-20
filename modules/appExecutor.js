@@ -71,7 +71,9 @@ async function verifyPreCondition(preCondition) {
       console.log(
         `Precondition failed. if You want to skip the preCondition check with this failure, please write "skip". \n else press anything to continue.`
       );
-      const userInput = await askUser("Waiting for your response...");
+      const userInput = await this.utils.askUser(
+        "Waiting for your response..."
+      );
       if (userInput.toLowerCase() === "skip") {
         preConditionResult = true;
       }

@@ -70,6 +70,7 @@ const checkChromeProfileOwner = async function () {
     console.log(`Browser not initialized to check profileOwner`);
     return;
   }
+  // 1. Getting Current Profile Owner name and Email
   if (this.page.url() !== "https://www.youtube.com/");
   await this.page.navigateTo("https://www.youtube.com/");
   await this.page.waitForPageLoad();
@@ -81,6 +82,15 @@ const checkChromeProfileOwner = async function () {
   let email = await (
     await this.page.locator("#email").waitHandle()
   ).evaluate((el) => el.innerText);
+
+  // 2. Getting Current Profile number
+  await this.page.navigateTo("chrome://version/");
+  await this.page.waitForPageLoad();
+  const path = await this.page.getText("#profile_path");
+  this.nextAvailableChromeProfile = 1 * path.split(" ")[1];
+  console.log(
+    `this.nextAvailableChromeProfile is : ${this.nextAvailableChromeProfile}`
+  );
 
   if (!name || !email || this.state.newMemberToAdd.gmail !== email) {
     console.log(`Profile Owner not found`);

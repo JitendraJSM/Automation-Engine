@@ -24,30 +24,21 @@
     "actionName": "popUpHandler"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
+    "preCondition": "chrome://new-tab-page/",
     "parentModuleName": "page",
     "actionName": "navigateTo",
     "argumentsString": "https://www.youtube.com",
     "doNotParseArgumentString": true
   },
   {
+    "preCondition": "https://www.youtube.com",
     "parentModuleName": "youTube",
     "actionName": "clickShortsBTN"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
+    "preCondition": "https://www.youtube.com/shorts",
     "parentModuleName": "youTube",
     "actionName": "clickLikeBTN"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
   },
   {
     "parentModuleName": "page",
@@ -55,6 +46,7 @@
     "argumentsString": "a ::-p-text(Sign in)"
   },
   {
+    "preCondition": "signin/identifier?",
     "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
@@ -65,10 +57,7 @@
     "argumentsString": "::-p-text(Next)"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
+    "preCondition": "signin/challenge/pwd?",
     "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "input[type=\"password\"],hhjsm001"
@@ -83,21 +72,17 @@
     "actionName": "clickNotClickable",
     "argumentsString": "::-p-text(Next)"
   },
+  // after this action it needs to have a decicion as there could be different types of page can occur like
+  // https://accounts.google.com/v3/signin/challenge/selection?
+  //  or recaptcha
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
+    "preCondition": "https://www.youtube.com",
     "parentModuleName": "chrome",
     "actionName": "ReconnectBrowser"
   },
   {
     "parentModuleName": "popUpFunctions",
     "actionName": "popUpHandler"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
   },
   {
     "parentModuleName": "chrome",

@@ -31,10 +31,12 @@
     "doNotParseArgumentString": true
   },
   {
+    "preCondition": "https://www.youtube.com",
     "parentModuleName": "youTube",
     "actionName": "clickShortsBTN"
   },
   {
+    "preCondition": "https://www.youtube.com/shorts",
     "parentModuleName": "youTube",
     "actionName": "clickLikeBTN"
   },
@@ -44,6 +46,7 @@
     "argumentsString": "a ::-p-text(Sign in)"
   },
   {
+    "preCondition": "signin/identifier?",
     "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "#identifierId,this.state.newMemberToAdd.gmail"
@@ -54,6 +57,7 @@
     "argumentsString": "::-p-text(Next)"
   },
   {
+    "preCondition": "signin/challenge/pwd?",
     "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "input[type=\"password\"],hhjsm001"
@@ -69,6 +73,7 @@
     "argumentsString": "::-p-text(Next)"
   },
   {
+    "preCondition": "https://www.youtube.com",
     "parentModuleName": "chrome",
     "actionName": "ReconnectBrowser"
   },
