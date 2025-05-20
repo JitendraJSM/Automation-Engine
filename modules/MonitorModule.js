@@ -5,22 +5,39 @@ class Monitor {
   pollingTaskNameGenerator(functionName) {
     if (!functionName) return `anonymous_${Date.now()}`;
 
-    let existingCount = Object.keys(this.pollingTasks).filter((taskName) => taskName.startsWith(`${functionName}_`)).length;
+    let existingCount = Object.keys(this.pollingTasks).filter((taskName) =>
+      taskName.startsWith(`${functionName}_`)
+    ).length;
 
     return `${functionName}_${existingCount + 1}`;
   }
 
   robustPolling(func, options = {}, ...args) {
-    const { maxAttempts = 30, intervalMs = 1000, timeoutMs = 30000, retryCondition = () => true, rejectOnEnd = true, infintiePolling = false } = options;
+    const {
+      maxAttempts = 30,
+      intervalMs = 1000,
+      timeoutMs = 30000,
+      retryCondition = () => true,
+      rejectOnEnd = true,
+      infintiePolling = false,
+      waitForFunctionCompletion = false,
+    } = options;
 
     let pollingTaskName = this.pollingTaskNameGenerator(func.name);
-
     let attempts = 0;
     const startTime = Date.now();
+    let isRunning = false;
 
     const pollingPromise = new Promise((resolve, reject) => {
       const intervalFun = setInterval(async () => {
+        // Skip this iteration if previous execution hasn't finished and waitForFunctionCompletion is true
+        if (waitForFunctionCompletion && isRunning) {
+          return;
+        }
+
         attempts++;
+        isRunning = true;
+
         try {
           const result = await func(...args);
 
@@ -32,10 +49,17 @@ class Monitor {
           }
         } catch (err) {
           const errMSG = err.message || "Error msg not defined";
-          console.log(`Task ${pollingTaskName} - Attempt ${attempts} failed with error:`, errMSG);
+          console.log(
+            `Task ${pollingTaskName} - Attempt ${attempts} failed with error:`,
+            errMSG
+          );
+        } finally {
+          isRunning = false;
         }
 
-        const shouldStop = !infintiePolling && (attempts >= maxAttempts || Date.now() - startTime >= timeoutMs);
+        const shouldStop =
+          !infintiePolling &&
+          (attempts >= maxAttempts || Date.now() - startTime >= timeoutMs);
 
         if (shouldStop) {
           clearInterval(intervalFun);
