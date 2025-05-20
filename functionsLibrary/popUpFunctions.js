@@ -1,9 +1,7 @@
 const handlers = {
   // url:"selectorStringToClick"
-  "chrome://privacy-sandbox-dialog/notice":
-    "privacy-sandbox-notice-dialog-app >>> #ackButton",
-  "chrome://signin-dice-web-intercept.top-chrome/chrome-signin":
-    "chrome-signin-app >>> #accept-button",
+  "chrome://privacy-sandbox-dialog/notice": "privacy-sandbox-notice-dialog-app >>> #ackButton",
+  "chrome://signin-dice-web-intercept.top-chrome/chrome-signin": "chrome-signin-app >>> #accept-button",
 };
 
 // === Implementation ===
@@ -53,20 +51,17 @@ const handlers = {
 // }
 // So, I have added a new function with the name as popUpHandler but having monitor called monitorPopU
 const popUpHandler = async function () {
-  const monitorPopUpPromise = this.monitor.robustPolling(
-    this.popUpFunctions.monitorPopUp.bind(this),
-    {
-      infintiePolling: true,
-      intervalMs: 3000, // Check every 5 seconds
-    }
-  );
+  const monitorPopUpPromise = this.monitor.robustPolling(this.popUpFunctions.monitorPopUp.bind(this), {
+    infintiePolling: true,
+    intervalMs: 3000, // Check every 5 seconds
+  });
   setTimeout(() => {
     monitorPopUpPromise.stop();
   }, 25000);
 
   monitorPopUpPromise
     .then((result) => {
-      console.log("Polling succeeded:", result);
+      console.log(result);
     })
     .catch((err) => {
       console.log("Polling failed:", err);
@@ -80,9 +75,7 @@ const monitorPopUp = async function () {
 
   for (const url of Object.keys(handlers)) {
     try {
-      const popUpPage = (await this.browser.pages()).find(
-        (p) => p.url() === url
-      );
+      const popUpPage = (await this.browser.pages()).find((p) => p.url() === url);
 
       if (popUpPage) {
         await this.utils.randomDelay(1.5, 2); // Add a small delay for stability
@@ -92,8 +85,8 @@ const monitorPopUp = async function () {
 
         await popUpPage.bringToFront();
         await popUpPage.locator(selector).click();
-        console.log(`Popup handled by monitor: ${url}`);
-        return popUpPage;
+        // console.log(`Popup handled by monitor: ${url}`);
+        return `Popup handled by monitor: ${url}`;
       }
     } catch (error) {
       console.error(`Error handling popup for  ${url}:`, error);

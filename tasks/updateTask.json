@@ -24,10 +24,7 @@
     "actionName": "popUpHandler"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
+    "preCondition": "chrome://new-tab-page/",
     "parentModuleName": "page",
     "actionName": "navigateTo",
     "argumentsString": "https://www.youtube.com",
@@ -38,16 +35,8 @@
     "actionName": "clickShortsBTN"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
     "parentModuleName": "youTube",
     "actionName": "clickLikeBTN"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
   },
   {
     "parentModuleName": "page",
@@ -66,10 +55,6 @@
   },
   {
     "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
-    "parentModuleName": "page",
     "actionName": "typeHuman",
     "argumentsString": "input[type=\"password\"],hhjsm001"
   },
@@ -84,20 +69,12 @@
     "argumentsString": "::-p-text(Next)"
   },
   {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
-  },
-  {
     "parentModuleName": "chrome",
     "actionName": "ReconnectBrowser"
   },
   {
     "parentModuleName": "popUpFunctions",
     "actionName": "popUpHandler"
-  },
-  {
-    "parentModuleName": "page",
-    "actionName": "waitForPageLoad"
   },
   {
     "parentModuleName": "chrome",
