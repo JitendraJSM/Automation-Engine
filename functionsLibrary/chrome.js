@@ -76,30 +76,25 @@ const checkChromeProfileOwner = async function () {
   await this.page.waitForPageLoad();
   await this.page.clickNotClickable("#avatar-btn");
 
-  let name = await (
-    await this.page.locator("#account-name").waitHandle()
-  ).evaluate((el) => el.innerText);
-  let email = await (
-    await this.page.locator("#email").waitHandle()
-  ).evaluate((el) => el.innerText);
-
+  const name = await (await this.page.locator("#account-name").waitHandle()).evaluate((el) => el.innerText);
+  const email = await (await this.page.locator("#email").waitHandle()).evaluate((el) => el.innerText);
+  await this.utils.randomDelay(1, 0.5);
   // 2. Getting Current Profile number
   await this.page.navigateTo("chrome://version/");
   await this.page.waitForPageLoad();
   const path = await this.page.getText("#profile_path");
-  this.nextAvailableChromeProfile = 1 * path.split(" ")[1];
-  console.log(
-    `this.nextAvailableChromeProfile is : ${this.nextAvailableChromeProfile}`
-  );
+  const currentProfileTArget = 1 * path.split(" ")[1];
+  this.state.nextAvailableChromeProfile = currentProfileTArget;
 
-  if (!name || !email || this.state.newMemberToAdd.gmail !== email) {
+  if (!name || !email || !currentProfileTArget) {
     console.log(`Profile Owner not found`);
     return;
   }
-
+  this.state.isCheckChromeProfileOwnerExecuted = true;
   this.state.profileOwner = name;
   this.state.profileOwnerEmail = email;
-  console.log(`Profile Owner: ${name} (${email})`);
+  this.state.profileTarget = currentProfileTArget;
+  console.log(`Profile Owner: ${name} (${email} & ${currentProfileTArget}.)`);
 };
 
 const printAllPagesURLs = async function () {

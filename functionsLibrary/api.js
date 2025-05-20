@@ -12,9 +12,7 @@ const fetchAPI = async function (endpoint, params = {}) {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP error! status: ${response.status} on ${API_URL}${endpoint}`
-      );
+      throw new Error(`HTTP error! status: ${response.status} on ${API_URL}${endpoint}`);
     }
 
     const data = await response.json();
@@ -62,9 +60,7 @@ const update = async function (endpoint, data, params = {}) {
 
 // ------------------- Get Data from API Methods
 const getNewMemberToAdd = async function () {
-  const response = await fetchAPI(
-    `/members?systemName=-${this.state.currentMachine}`
-  );
+  const response = await fetchAPI(`/members?systemName=-${this.state.currentMachine}`);
   if (response.results == 0) {
     console.log(`No new member to add.`);
     return false;
@@ -78,21 +74,25 @@ const getNewMemberToAdd = async function () {
 getNewMemberToAdd.shouldStoreState = "newMemberToAdd";
 // getNewMemberToAdd.continueOnError = false;
 
-async function addSystemProfileToMember(
-  memberGmail,
-  systemName,
-  profileNumber
-) {
+async function addSystemProfileToMember(memberGmail, systemName, profileNumber) {
   console.log(`ok addSystemProfileToMember started`);
-
-  memberGmail ||= this.state.newMemberToAdd.gmail;
+  if (!this.state.isCheckChromeProfileOwnerExecuted) return false;
+  memberGmail ||= this.state.profileOwnerEmail;
   systemName ||= this.state.currentMachine;
-  profileNumber ||= this.state.nextAvailableChromeProfile;
+  profileNumber ||= this.state.profileTarget;
+
+  if (!memberGmail || !systemName || !profileNumber) return false;
+  // 1. Get the memberId
   const response = await fetchAPI(`/members?gmail=${memberGmail}`, {
     method: "GET",
   });
 
-  const memberId = this.state.newMemberToAdd._id;
+  if (response.results == 0) {
+    console.log(`No member found with gmail ${memberGmail}`);
+    return false;
+  }
+
+  const memberId = response.data.data[0]._id;
 
   const sytemProfile = { systemName, profileNumber };
 
