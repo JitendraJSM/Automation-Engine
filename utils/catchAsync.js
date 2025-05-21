@@ -66,7 +66,9 @@ const catchAsync = (fn) => {
         if (userInput === "skip") return;
         // else if (userInput==="r")
         else {
-          this.current;
+          this.currentActionIndex--;
+          this.currentActionIndex--;
+          return;
         }
       }
     }

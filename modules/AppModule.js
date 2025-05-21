@@ -87,7 +87,13 @@ class App {
       this.currentActionIndex < this.task.length
     ) {
       this.currentAction = this.task[this.currentActionIndex];
+      console.log(
+        `before executing the action: ${this.currentAction.actionName} the currentActionIndex is: ${this.currentActionIndex}`
+      );
       await executeAction.call(this, this.currentAction);
+      console.log(
+        `After executing the action the currentActionIndex is: ${this.currentActionIndex}`
+      );
 
       // Default behavior: move to next task
       this.currentActionIndex++;

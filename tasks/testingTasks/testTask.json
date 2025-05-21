@@ -33,6 +33,6 @@
   {
     "parentModuleName": "page",
     "actionName": "typeHuman",
-    "argumentsString": "#user-name,standard_user21"
+    "argumentsString": "#usar-name,standard_user21"
   }
 ]
