@@ -62,9 +62,7 @@ class App {
       // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
 
       if (this.errorHandler == null) {
-        console.log(
-          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
-        );
+        console.log(`Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`);
         // console.log(error);
       } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
@@ -82,18 +80,15 @@ class App {
     this.currentActionIndex = 0;
 
     // Execute tasks while we have valid index
-    while (
-      this.currentActionIndex >= 0 &&
-      this.currentActionIndex < this.task.length
-    ) {
+    while (this.currentActionIndex >= 0 && this.currentActionIndex < this.task.length) {
       this.currentAction = this.task[this.currentActionIndex];
-      console.log(
-        `before executing the action: ${this.currentAction.actionName} the currentActionIndex is: ${this.currentActionIndex}`
-      );
+      // console.log(
+      //   `before executing the action: ${this.currentAction.actionName} the currentActionIndex is: ${this.currentActionIndex}`
+      // );
       await executeAction.call(this, this.currentAction);
-      console.log(
-        `After executing the action the currentActionIndex is: ${this.currentActionIndex}`
-      );
+      // console.log(
+      //   `After executing the action the currentActionIndex is: ${this.currentActionIndex}`
+      // );
 
       // Default behavior: move to next task
       this.currentActionIndex++;
@@ -124,9 +119,7 @@ class App {
         // Only return result if it should be stored in state
         return shouldStoreState ? result : undefined;
       } catch (error) {
-        await utils.log(
-          `Action '${actionName}' failed with error: ${error.message}`
-        );
+        await utils.log(`Action '${actionName}' failed with error: ${error.message}`);
         throw error;
       }
     };

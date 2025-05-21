@@ -1,0 +1,43 @@
+[
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getCurrentMachineName"
+  },
+  {
+    "parentModuleName": "api",
+    "actionName": "getNewMemberToAdd"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "getNextAvailableChromeProfile"
+  },
+  {
+    "parentModuleName": "currentMachine",
+    "actionName": "isChromeAlreadyOpened"
+  },
+  {
+    "parentModuleName": "chrome",
+    "actionName": "initializeBrowser"
+  },
+  {
+    "parentModuleName": "popUpFunctions",
+    "actionName": "popUpHandler"
+  },
+  {
+    "preCondition": "chrome://new-tab-page/",
+    "parentModuleName": "page",
+    "actionName": "navigateTo",
+    "argumentsString": "https://www.saucedemo.com/v1/index.html",
+    "doNotParseArgumentString": true
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "#user-name,standard_user21"
+  },
+  {
+    "parentModuleName": "page",
+    "actionName": "typeHuman",
+    "argumentsString": "#password,secret_sauce"
+  }
+]

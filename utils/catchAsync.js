@@ -1,3 +1,4 @@
+// const testTask = require("testTask.json")
 //  Note How to use it:
 /* 
 // Step 1: define the async function
@@ -52,32 +53,51 @@ const catchAsync = (fn) => {
       if (!fn.continueOnError) {
         throw error;
       } else {
-        const modErrorMSG = `Error in ${fn.name}: ${
-          error.message
-        }. \n${error?.stack?.split("\n")[1]?.trim()}`;
+        const modErrorMSG = `Error in ${fn.name}: ${error.message}. \n${error?.stack?.split("\n")[1]?.trim()}`;
 
         console.error(`\x1b[31m${modErrorMSG}\x1b[0m`);
         this.logger.logError(modErrorMSG);
         const msgForUser =
-          "Please resolve the error and press 'r' to retry or \nIf you wnat to skip this action then write 'skip' and press Enter.....";
+          "Please resolve the error and press \n---'r' to retry.\n---'ra' if you want to read the task again and then retry the current Action.\n---'cr 5' if you want to read the task again and start the task from index no. 5.\n---'s' if you want to skip.\nPress Enter.....";
         const userInput = (await askUser(`${msgForUser}`)).toLowerCase();
         console.log(`user input is: ${userInput}`);
 
-        if (userInput === "skip") return;
-        // else if (userInput==="r")
-        else {
-          this.currentActionIndex--;
-          return;
+        switch (userInput) {
+          case "s":
+          case "skip":
+            return;
+          case "r":
+            this.currentActionIndex--;
+            return;
+          case "ra":
+            // Read task again and retry current action
+            console.log(`dir Name is: ${__dirname}`);
+
+            this.task = require(`../tasks/${this.task.taskName}.json`);
+            this.currentActionIndex--;
+            return;
+          default:
+            if (userInput.startsWith("cr ")) {
+              // Extract the index number after 'cr '
+              const newIndex = parseInt(userInput.split(" ")[1]);
+              this.task = require(`../tasks/${this.task.taskName}.json`);
+              if (!isNaN(newIndex)) {
+                this.currentActionIndex = newIndex - 1; // as currentActionIndex++ in appExecuter.js before next loop
+              }
+            } else {
+              this.currentActionIndex--; // Default behavior: retry current action
+            }
+            return;
         }
       }
     }
   };
-  // Set the function name
+  // Setting the function name for logger and console log
   Object.defineProperty(wrappedFn, "name", {
     value: fn.name,
     configurable: true,
   });
-  // Copy all other properties
+  // Copying all other properties like shouldStoreState, etc.
   Object.assign(wrappedFn, fn);
   return wrappedFn;
 };
