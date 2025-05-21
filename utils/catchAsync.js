@@ -67,7 +67,6 @@ const catchAsync = (fn) => {
         // else if (userInput==="r")
         else {
           this.currentActionIndex--;
-          this.currentActionIndex--;
           return;
         }
       }
