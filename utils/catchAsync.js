@@ -58,7 +58,16 @@ const catchAsync = (fn) => {
 
         console.error(`\x1b[31m${modErrorMSG}\x1b[0m`);
         this.logger.logError(modErrorMSG);
-        await askUser("Press Enter to continue...");
+        const msgForUser =
+          "Please resolve the error and press 'r' to retry or \nIf you wnat to skip this action then write 'skip' and press Enter.....";
+        const userInput = (await askUser(`${msgForUser}`)).toLowerCase();
+        console.log(`user input is: ${userInput}`);
+
+        if (userInput === "skip") return;
+        // else if (userInput==="r")
+        else {
+          this.current;
+        }
       }
     }
   };

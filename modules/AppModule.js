@@ -62,7 +62,9 @@ class App {
       // console.log(`The action called ${this.actionList[this.currentActionIndex].callback.name} failed.`);
 
       if (this.errorHandler == null) {
-        console.log(`Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`);
+        console.log(
+          `Error Handler is not defined. Please define as: app.addGlobalErrorHandler(error)`
+        );
         // console.log(error);
       } else this.errorHandler(error);
     } else if (this.currentActionIndex < this.actionList.length) {
@@ -75,10 +77,24 @@ class App {
     this.task = Array.isArray(task) ? task : [task];
 
     if (this.task.log !== false) loggerInit.call(this);
-    // Execute each action sequentially
-    for (const action of this.task) {
-      this.currentAction = action;
-      await executeAction.call(this, action);
+
+    // Initialize task index
+    this.currentActionIndex = 0;
+
+    // Execute tasks while we have valid index
+    while (
+      this.currentActionIndex >= 0 &&
+      this.currentActionIndex < this.task.length
+    ) {
+      this.currentAction = this.task[this.currentActionIndex];
+      await executeAction.call(this, this.currentAction);
+
+      // Default behavior: move to next task
+      this.currentActionIndex++;
+
+      // You can add custom flow control here, for example:
+      // if (someCondition) this.currentActionIndex--; // Go back
+      // if (anotherCondition) this.currentActionIndex += 2; // Skip next task
     }
 
     // Logging the state in the end
@@ -102,7 +118,9 @@ class App {
         // Only return result if it should be stored in state
         return shouldStoreState ? result : undefined;
       } catch (error) {
-        await utils.log(`Action '${actionName}' failed with error: ${error.message}`);
+        await utils.log(
+          `Action '${actionName}' failed with error: ${error.message}`
+        );
         throw error;
       }
     };
